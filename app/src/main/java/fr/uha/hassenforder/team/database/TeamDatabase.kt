@@ -15,6 +15,8 @@ import fr.uha.hassenforder.team.model.Person
 )
 abstract class TeamDatabase : RoomDatabase() {
 
+    abstract val personDAO : PersonDao
+
     companion object {
         private lateinit var instance : TeamDatabase
 

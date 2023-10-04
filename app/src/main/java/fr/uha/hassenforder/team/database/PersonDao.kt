@@ -18,7 +18,7 @@ interface PersonDao {
     fun getPersonById (id : Long) : Flow<Person?>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun create (person : Person) : Long
+    suspend fun create (person : Person) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun update (person : Person) : Long

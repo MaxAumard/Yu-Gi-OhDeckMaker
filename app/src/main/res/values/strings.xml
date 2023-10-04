@@ -4,4 +4,6 @@
     <string name="lastname">lastname</string>
     <string name="phone">phone</string>
     <string name="gender">gender</string>
+    <string name="loading">Loading the content</string>
+    <string name="error">Error loading content</string>
 </resources>
