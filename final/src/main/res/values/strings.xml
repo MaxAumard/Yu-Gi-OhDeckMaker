@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Team 2023</string>
+    <string name="title_person_create">Create Person</string>
+    <string name="title_person_edit">Edit Person</string>
+    <string name="title_persons">All Persons</string>
+    <string name="firstname">Firstname</string>
+    <string name="lastname">lastname</string>
+    <string name="phone">phone</string>
+    <string name="gender">gender</string>
+    <string name="loading">loading</string>
+    <string name="error">error</string>
+    <string name="save">save</string>
+    <string name="action_persons">persons</string>
+    <string name="action_teams">teams</string>
+    <string name="action_person_create">create</string>
+    <string name="action_person_edit">edit</string>
+    <string name="populate">populate</string>
+    <string name="clear">clear</string>
+    <string name="picture">picture</string>
+    <string name="title_teams">All teams</string>
+    <string name="starts">start day</string>
+    <string name="duration">duration</string>
+    <string name="action_team_create">create</string>
+    <string name="action_team_edit">edit</string>
+    <string name="title_team_create">Create Team</string>
+    <string name="title_team_edit">Edit Team</string>
+    <string name="teamname">name</string>
+    <string name="start_day">start day</string>
+    <string name="leader">leader</string>
+    <string name="leader_select">Select a leader</string>
+    <string name="person_select">Select a Person</string>
+    <string name="member_select">Select a member</string>
+    <string name="members">members</string>
+</resources>

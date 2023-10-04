@@ -1,0 +1,11 @@
+<resources>
+    <string name="date_now">now</string>
+    <string name="date_today">today</string>
+    <string name="date_yesterday">yesterday</string>
+    <string name="date_tomorrow">tomorrow</string>
+    <string name="day_title">Select a day</string>
+    <string name="duration">duration</string>
+    <string name="picture">Picture</string>
+    <string name="valid">ok</string>
+    <string name="cancel">cancel</string>
+</resources>
