@@ -21,7 +21,7 @@ class PersonRepository(private val personDao: PersonDao)
         return@withContext personDao.create(person)
     }
 
-    suspend fun update (person : Person) : Long = withContext(Dispatchers.IO) {
+    suspend fun update (oldPerson : Person, person : Person) : Long = withContext(Dispatchers.IO) {
         return@withContext personDao.update(person)
     }
 

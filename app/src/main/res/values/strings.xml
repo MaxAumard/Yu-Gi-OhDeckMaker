@@ -6,4 +6,7 @@
     <string name="gender">gender</string>
     <string name="loading">Loading the content</string>
     <string name="error">Error loading content</string>
+    <string name="person_create">Create Person</string>
+    <string name="save">save</string>
+    <string name="person_list">List of Persons</string>
 </resources>

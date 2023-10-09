@@ -175,7 +175,7 @@ class PersonViewModel @Inject constructor (
         val pid : Long = repository.create(person)
         _id.emit(pid)
     }
-/*
+
     fun save() = viewModelScope.launch {
         if (_initialPersonState.value !is PersonState.Success) return@launch
         val oldPerson = _initialPersonState.value as PersonState.Success
@@ -189,5 +189,5 @@ class PersonViewModel @Inject constructor (
         )
         repository.update(oldPerson.person, person)
     }
-*/
+
 }
