@@ -29,18 +29,15 @@ import fr.uha.hassenforder.team.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreatePersonScreen (
+fun EditPersonScreen (
     vm : PersonViewModel = hiltViewModel(),
+    pid : Long,
     back : () -> Unit
 ) {
     val state by vm.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = vm.isLaunched) {
-        if (!vm.isLaunched) {
-            val person = Person(0, "michel", "hassenforder", "0123456789", Gender.BOY, null)
-            vm.create(person)
-            vm.isLaunched = true
-        }
+    LaunchedEffect(Unit) {
+        vm.edit(pid)
     }
 
     val menuEntries = listOf (
@@ -55,7 +52,7 @@ fun CreatePersonScreen (
     Scaffold (
         topBar = {
             TopAppBar(
-                title = { AppTitle(appNameId = R.string.app_name, pageTitleId = R.string.person_create, isModified = state.isModified()) },
+                title = { AppTitle(appNameId = R.string.app_name, pageTitleId = R.string.person_edit, isModified = state.isModified()) },
                 actions = { AppMenu(entries = menuEntries) }
             )
         }

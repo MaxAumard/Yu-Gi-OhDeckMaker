@@ -7,7 +7,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Casino
 import androidx.compose.material.icons.outlined.DoNotDisturb
+import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Female
 import androidx.compose.material.icons.outlined.Male
 import androidx.compose.material.icons.outlined.Phone
@@ -21,12 +23,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import fr.uha.hassenforder.android.ui.AppMenu
 import fr.uha.hassenforder.android.ui.AppMenuEntry
 import fr.uha.hassenforder.android.ui.AppTitle
@@ -40,11 +44,16 @@ import fr.uha.hassenforder.team.ui.theme.Team2023Theme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListPersonsScreen(
-    vm : ListPersonsViewModel = hiltViewModel()
+    vm : ListPersonsViewModel = hiltViewModel(),
+    onCreate : () -> Unit,
+    onEdit : (p : Person) -> Unit,
 ) {
     val persons = vm.persons.collectAsStateWithLifecycle(initialValue = emptyList())
 
-    val menuEntries = emptyList<AppMenuEntry>()
+    val menuEntries = listOf(
+        AppMenuEntry.OverflowEntry(title = R.string.populate, listener = {vm.feed() } ),
+        AppMenuEntry.OverflowEntry(title = R.string.clean, listener = {vm.clean() } )
+    )
 
     Scaffold(
         topBar = {
@@ -56,7 +65,7 @@ fun ListPersonsScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {} ) {
+            FloatingActionButton(onClick = onCreate ) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = null)
             }
         }
@@ -67,7 +76,7 @@ fun ListPersonsScreen(
                 key = { person -> person.pid }
             ) {
                 item -> SwipeableItem (
-                    onEdit = {},
+                    onEdit = { onEdit(item) },
                     onDelete = {},
                 ) {
                     PersonItem(item)
@@ -93,6 +102,15 @@ fun PersonItem(person : Person) {
                 Text(person.lastname)
             }
        },
+        leadingContent = {
+            AsyncImage(
+                model = person.picture,
+                modifier = Modifier.size(64.dp),
+                contentDescription = "Selected image",
+                error = rememberVectorPainter(Icons.Outlined.Error),
+                placeholder = rememberVectorPainter(Icons.Outlined.Casino),
+            )
+        },
         trailingContent = {
             Icon(imageVector = gender, contentDescription = null, modifier = Modifier.size(48.dp))
         },
@@ -109,6 +127,6 @@ fun PersonItem(person : Person) {
 @Composable
 fun ListPreview() {
     Team2023Theme {
-        PersonItem(Person(0,"w kjbdw", "sjkvbsdvj", "5788", Gender.GIRL))
+        PersonItem(Person(0,"w kjbdw", "sjkvbsdvj", "5788", Gender.GIRL, null))
     }
 }

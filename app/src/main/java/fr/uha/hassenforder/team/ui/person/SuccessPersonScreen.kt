@@ -6,9 +6,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import fr.uha.hassenforder.android.ui.OutlinedEnumRadioGroup
+import fr.uha.hassenforder.android.ui.PictureField
 import fr.uha.hassenforder.team.R
+import fr.uha.hassenforder.team.TeamFileProvider
 import fr.uha.hassenforder.team.model.Gender
 
 @Composable
@@ -16,6 +19,8 @@ fun SuccessPersonScreen(
     person: PersonViewModel.PersonUIState,
     uiCB: PersonViewModel.PersonUICallback
 ) {
+    val context = LocalContext.current
+
     Column(
     ) {
         OutlinedTextField(
@@ -49,6 +54,14 @@ fun SuccessPersonScreen(
             items = Gender.values(),
             labelId = R.string.gender,
             errorId = person.genderState.errorId,
+        )
+        PictureField(
+            value = person.pictureState.current,
+            onValueChange = { uiCB.onEvent(PersonViewModel.UIEvent.PictureChanged(it)) },
+            newImageUriProvider = { TeamFileProvider.getImageUri(context) },
+            modifier = Modifier.fillMaxWidth(),
+            labelId = R.string.picture,
+            errorId = person.pictureState.errorId
         )
     }
 }

@@ -1,5 +1,6 @@
 package fr.uha.hassenforder.team.model
 
+import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -11,5 +12,6 @@ data class Person (
     val lastname : String,
     val phone : String,
     val gender : Gender,
+    val picture : Uri?
 ) {
 }

@@ -9,4 +9,12 @@
     <string name="person_create">Create Person</string>
     <string name="save">save</string>
     <string name="person_list">List of Persons</string>
+    <string name="action_persons">persons route</string>
+    <string name="action_teams">teams route</string>
+    <string name="person_edit">Person edit</string>
+    <string name="action_person_create">Create Person</string>
+    <string name="action_person_edit">Edit Person</string>
+    <string name="populate">Populate</string>
+    <string name="clean">clean</string>
+    <string name="picture">Picture</string>
 </resources>

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
 import fr.uha.hassenforder.team.database.TeamDatabase
+import fr.uha.hassenforder.team.ui.TeamAppScreen
 import fr.uha.hassenforder.team.ui.person.CreatePersonScreen
 import fr.uha.hassenforder.team.ui.person.ListPersonsScreen
 import fr.uha.hassenforder.team.ui.theme.Team2023Theme
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    ListPersonsScreen()
+                    TeamAppScreen()
                 }
             }
         }

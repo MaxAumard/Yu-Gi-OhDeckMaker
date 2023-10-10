@@ -74,8 +74,7 @@ class PersonViewModel @Inject constructor (
                 _lastnameState.emit(FieldWrapper.buildLastname(uiState.value, p.lastname))
                 _phoneState.emit(FieldWrapper.buildPhone(uiState.value, p.phone))
                 _genderState.emit(FieldWrapper.buildGender(uiState.value, p.gender))
-//                _pictureState.emit(FieldWrapper.buildPicture(uiState.value, p.picture))
-                _pictureState.emit(FieldWrapper.buildPicture(uiState.value, null))
+                _pictureState.emit(FieldWrapper.buildPicture(uiState.value, p.picture))
                 PersonState.Success(person = p)
             } else {
                 PersonState.Error
@@ -97,7 +96,7 @@ class PersonViewModel @Inject constructor (
             if (lastnameState.current != initialState.person.lastname) return true
             if (phoneState.current != initialState.person.phone) return true
             if (genderState.current != initialState.person.gender) return true
-//            if (pictureState.current != initialState.person.picture) return true
+            if (pictureState.current != initialState.person.picture) return true
             if (pictureState.current != null) return true
             return false
         }
@@ -185,7 +184,7 @@ class PersonViewModel @Inject constructor (
             _lastnameState.value.current!!,
             _phoneState.value.current!!,
             _genderState.value.current!!,
-//            _pictureState.value.current
+            _pictureState.value.current
         )
         repository.update(oldPerson.person, person)
     }
