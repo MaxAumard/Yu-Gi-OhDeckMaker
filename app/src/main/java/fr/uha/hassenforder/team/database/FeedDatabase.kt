@@ -15,18 +15,18 @@ class FeedDatabase {
         ids[3] = dao.create(getRandomPerson(Gender.NO))
         return ids
     }
-/*
+
     private suspend fun feedTeams(pids: LongArray) {
-        val dao: TeamDao = TeamDatabase.get().getTeamDao()
+        val dao: TeamDao = TeamDatabase.get().teamDao
         val team = getRandomTeam(pids.get(0))
         val tid = dao.create(team)
-        dao.addTeamPerson(TeamPersonAssociation(tid, pids.get(0)))
-        dao.addTeamPerson(TeamPersonAssociation(tid, pids.get(3)))
+//        dao.addTeamPerson(TeamPersonAssociation(tid, pids.get(0)))
+//        dao.addTeamPerson(TeamPersonAssociation(tid, pids.get(3)))
     }
-*/
+
     suspend fun populate() {
         val pids = feedPersons()
-//        feedTeams(pids)
+        feedTeams(pids)
     }
 
     suspend fun clear() {
@@ -194,18 +194,14 @@ class FeedDatabase {
         private fun getRandomTeamName(): String {
             return geRandomName(teamNames)
         }
-/*
+
         private fun getRandomTeam(leader: Long): Team {
             return Team(0,
                     getRandomTeamName(),
-                    Objective.values()[rnd.nextInt(Objective.values().size)].name,
                     Date(),
                     getRandomBetween(3, 9),
-                    getRandomBetween(2, 4),
-                    getRandomBetween(4, 6),
                     leader
             )
         }
-*/
     }
 }

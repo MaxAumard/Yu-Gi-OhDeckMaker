@@ -2,6 +2,7 @@ package fr.uha.hassenforder.team.repository
 
 import fr.uha.hassenforder.team.database.PersonDao
 import fr.uha.hassenforder.team.model.Person
+import fr.uha.hassenforder.team.model.PersonWithDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -9,8 +10,8 @@ import okhttp3.Dispatcher
 
 class PersonRepository(private val personDao: PersonDao)
 {
-    fun getAll () : Flow<List<Person>> {
-        return personDao.getAll()
+    fun getAll () : Flow<List<PersonWithDetails>> {
+        return personDao.getAllWithDetails()
     }
 
     fun getPersonById (id : Long) : Flow<Person?> {

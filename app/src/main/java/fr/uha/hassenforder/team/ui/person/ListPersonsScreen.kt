@@ -1,5 +1,6 @@
 package fr.uha.hassenforder.team.ui.person
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -39,6 +40,7 @@ import fr.uha.hassenforder.team.Greeting
 import fr.uha.hassenforder.team.R
 import fr.uha.hassenforder.team.model.Gender
 import fr.uha.hassenforder.team.model.Person
+import fr.uha.hassenforder.team.model.PersonWithDetails
 import fr.uha.hassenforder.team.ui.theme.Team2023Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,10 +75,10 @@ fun ListPersonsScreen(
         innerPadding -> LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items (
                 items = persons.value,
-                key = { person -> person.pid }
+                key = { person -> person.person.pid }
             ) {
                 item -> SwipeableItem (
-                    onEdit = { onEdit(item) },
+                    onEdit = { onEdit(item.person) },
                     onDelete = {},
                 ) {
                     PersonItem(item)
@@ -88,8 +90,8 @@ fun ListPersonsScreen(
 }
 
 @Composable
-fun PersonItem(person : Person) {
-    val gender : ImageVector = when(person.gender) {
+fun PersonItem(person : PersonWithDetails) {
+    val gender : ImageVector = when(person.person.gender) {
         Gender.NO -> Icons.Outlined.DoNotDisturb
         Gender.GIRL -> Icons.Outlined.Female
         Gender.BOY -> Icons.Outlined.Male
@@ -98,13 +100,13 @@ fun PersonItem(person : Person) {
     ListItem (
         headlineContent = {
             Row() {
-                Text(person.firstname, modifier = Modifier.padding(end = 4.dp))
-                Text(person.lastname)
+                Text(person.person.firstname, modifier = Modifier.padding(end = 4.dp))
+                Text(person.person.lastname)
             }
        },
         leadingContent = {
             AsyncImage(
-                model = person.picture,
+                model = person.person.picture,
                 modifier = Modifier.size(64.dp),
                 contentDescription = "Selected image",
                 error = rememberVectorPainter(Icons.Outlined.Error),
@@ -115,18 +117,14 @@ fun PersonItem(person : Person) {
             Icon(imageVector = gender, contentDescription = null, modifier = Modifier.size(48.dp))
         },
         supportingContent = {
-            Row () {
-                Icon(imageVector = Icons.Outlined.Phone, contentDescription = null)
-                Text(person.phone, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Column {
+                Row() {
+                    Icon(imageVector = Icons.Outlined.Phone, contentDescription = null)
+                    Text(person.person.phone, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                }
+                Text(person.leaderCount.toString(), fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text(person.memberCount.toString(), fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ListPreview() {
-    Team2023Theme {
-        PersonItem(Person(0,"w kjbdw", "sjkvbsdvj", "5788", Gender.GIRL, null))
-    }
 }

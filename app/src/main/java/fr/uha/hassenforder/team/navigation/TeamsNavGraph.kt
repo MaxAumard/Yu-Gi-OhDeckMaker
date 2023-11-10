@@ -1,5 +1,5 @@
 package fr.uha.hassenforder.team.navigation
-/*
+
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import fr.uha.hassenforder.team.R
@@ -59,4 +59,3 @@ fun NavGraphBuilder.teamsNavGraph (
         }
     }
 }
-*/

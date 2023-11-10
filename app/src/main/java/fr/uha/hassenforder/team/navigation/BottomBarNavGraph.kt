@@ -73,7 +73,7 @@ fun BottomNavGraph (
         modifier = modifier
      ) {
         personsNavGraph(navController = navController)
-//        teamsNavGraph(navController = navController)
+        teamsNavGraph(navController = navController)
     }
 }
 
