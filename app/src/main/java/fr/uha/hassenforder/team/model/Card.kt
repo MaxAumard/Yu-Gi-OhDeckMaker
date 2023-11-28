@@ -4,14 +4,14 @@ import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity (tableName = "persons")
-data class Person (
+@Entity (tableName = "cards")
+data class Card (
     @PrimaryKey(autoGenerate = true)
-    val pid : Long = 0,
-    val firstname : String,
-    val lastname : String,
+    val cid : Long = 0,
+    val name : String,
+    val description : String,
     val phone : String,
-    val gender : Gender,
+    val type : Type,
     val picture : Uri?
 ) {
 }

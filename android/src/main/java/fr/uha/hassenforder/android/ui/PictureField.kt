@@ -58,10 +58,19 @@ fun PictureField(
 ) {
     val context = LocalContext.current
 
+    // GetContent contract launcher
     val imagePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
+        contract = ActivityResultContracts.OpenDocument(),
         onResult = { uri -> onValueChange(uri) }
     )
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            imagePicker.launch("image/*")
+        }
+    }
+
 
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = TakePictureWithUriContract(),

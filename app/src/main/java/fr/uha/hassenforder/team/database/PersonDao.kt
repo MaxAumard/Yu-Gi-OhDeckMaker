@@ -5,34 +5,33 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import fr.uha.hassenforder.team.model.Person
-import fr.uha.hassenforder.team.model.PersonWithDetails
+import fr.uha.hassenforder.team.model.Card
+import fr.uha.hassenforder.team.model.CardWithDetails
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PersonDao {
 
-    @Query("SELECT * FROM persons")
-    fun getAll () : Flow<List<Person>>
+    @Query("SELECT * FROM cards")
+    fun getAll () : Flow<List<Card>>
 
     @Query("SELECT * " +
-            ", (SELECT COUNT(*) FROM teams T WHERE T.leaderId = P.pid) AS leaderCount" +
-            ", (SELECT COUNT(*) FROM tpas TPA WHERE TPA.pid = P.pid) AS memberCount" +
-            " FROM persons AS P")
-    fun getAllWithDetails () : Flow<List<PersonWithDetails>>
+            ", (SELECT COUNT(*) FROM tpas TPA WHERE TPA.cid = C.cid) AS memberCount" +
+            " FROM cards AS C")
+    fun getAllWithDetails () : Flow<List<CardWithDetails>>
 
-    @Query("SELECT * FROM persons WHERE pid = :id")
-    fun getPersonById (id : Long) : Flow<Person?>
+    @Query("SELECT * FROM cards WHERE cid = :id")
+    fun getCardById (id : Long) : Flow<Card?>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun create (person : Person) : Long
+    suspend fun create (card : Card) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun update (person : Person) : Long
+    fun update (card : Card) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun upsert (person : Person) : Long
+    fun upsert (card : Card) : Long
 
     @Delete
-    fun delete (person : Person)
+    fun delete (card : Card)
 }

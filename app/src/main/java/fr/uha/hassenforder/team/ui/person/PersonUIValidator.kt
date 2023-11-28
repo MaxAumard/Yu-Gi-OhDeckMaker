@@ -2,7 +2,7 @@ package fr.uha.hassenforder.team.ui.person
 
 import android.net.Uri
 import fr.uha.hassenforder.team.R
-import fr.uha.hassenforder.team.model.Gender
+import fr.uha.hassenforder.team.model.Type
 
 object PersonUIValidator {
 
@@ -45,7 +45,7 @@ object PersonUIValidator {
             }
     }
 
-    fun validateGenderChange(newValue: Gender?) : Int? {
+    fun validateGenderChange(newValue: Type?) : Int? {
         return when {
             newValue == null ->  R.string.gender_must_set
             else -> null

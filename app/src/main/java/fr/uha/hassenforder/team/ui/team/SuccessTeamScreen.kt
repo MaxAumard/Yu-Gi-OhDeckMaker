@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import fr.uha.hassenforder.android.ui.OutlinedDateField
-import fr.uha.hassenforder.android.ui.OutlinedIntField
 import fr.uha.hassenforder.android.ui.OutlinedSpinnerField
 import fr.uha.hassenforder.team.R
 
@@ -21,12 +20,6 @@ fun SuccessTeamScreen(
     uiCB: TeamViewModel.TeamUICallback
 ) {
     val showDialog = remember { mutableStateOf(false) }
-    if (showDialog.value) {
-        PersonPicker(
-            title = R.string.leader_select,
-            onSelect = { showDialog.value = false; if (it != null) uiCB.onEvent(TeamViewModel.UIEvent.LeaderChanged(it.pid))}
-        )
-    }
 
     Column(
     ) {
@@ -44,20 +37,6 @@ fun SuccessTeamScreen(
             modifier = Modifier.fillMaxWidth(),
             label = R.string.start_day,
             errorId = team.startDay.errorId
-        )
-        OutlinedSpinnerField(
-            value =team.duration.current.toString(),
-            onValueChange = { try { val v : Int = it.toInt(); uiCB.onEvent(TeamViewModel.UIEvent.DurationChanged(v)) } catch (e:Exception) {} },
-            label = R.string.duration,
-            option_views = stringArrayResource(id = R.array.durations),
-            option_values = stringArrayResource(id = R.array.durations),
-            errorId = team.duration.errorId,
-        )
-        LeaderField(
-            value = team.leader.current,
-            onValueChange = { if (it) showDialog.value = true else uiCB.onEvent(TeamViewModel.UIEvent.LeaderChanged(null)) },
-            label = R.string.leader,
-            errorId = team.leader.errorId,
         )
         ListMembersField(
             value = team.members.current,

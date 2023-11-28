@@ -6,15 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import fr.uha.hassenforder.android.database.DatabaseTypeConverters
-import fr.uha.hassenforder.team.model.Person
-import fr.uha.hassenforder.team.model.Team
-import fr.uha.hassenforder.team.model.TeamPersonAssociation
+import fr.uha.hassenforder.team.model.Card
+import fr.uha.hassenforder.team.model.Deck
+import fr.uha.hassenforder.team.model.DeckCardAssociation
 
 @Database(
     entities = [
-        Person::class,
-        Team::class,
-        TeamPersonAssociation::class
+        Card::class,
+        Deck::class,
+        DeckCardAssociation::class
     ],
     version=1,
     exportSchema = false

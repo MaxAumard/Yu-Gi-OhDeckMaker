@@ -2,10 +2,8 @@ package fr.uha.hassenforder.team.model
 
 import androidx.room.Embedded
 
-class PersonWithDetails (
+class CardWithDetails (
         @Embedded
-        val person: Person,
-
-        val leaderCount : Int,
+        val card: Card,
         val memberCount : Int,
 )

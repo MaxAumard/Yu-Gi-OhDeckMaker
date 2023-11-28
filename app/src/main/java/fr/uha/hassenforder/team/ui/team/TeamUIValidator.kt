@@ -1,7 +1,7 @@
 package fr.uha.hassenforder.team.ui.team
 
 import fr.uha.hassenforder.team.R
-import fr.uha.hassenforder.team.model.Person
+import fr.uha.hassenforder.team.model.Card
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -45,12 +45,12 @@ object TeamUIValidator {
         }
     }
 
-    fun validateLeaderChange(newValue: Person?) : Int? {
+    fun validateLeaderChange(newValue: Card?) : Int? {
         if (newValue == null) return R.string.leader_must_known
         return null
     }
 
-    fun validateMembersChange(state : TeamViewModel.TeamUIState, newValue: List<Person>?) : Int? {
+    fun validateMembersChange(state : TeamViewModel.TeamUIState, newValue: List<Card>?) : Int? {
         if (newValue == null) return R.string.members_not_empty
         val size = newValue.size
         return when {

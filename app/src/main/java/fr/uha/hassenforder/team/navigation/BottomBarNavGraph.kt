@@ -45,9 +45,9 @@ sealed class BottomBarNavGraphEntry(
 ) {
 
     // for persons
-    object Persons: BottomBarNavGraphEntry(
+    object Cards: BottomBarNavGraphEntry(
         route = "tl_persons",
-        title = R.string.action_persons,
+        title = R.string.action_cards,
         icon = Icons.Outlined.Person,
         iconFocused = Icons.Filled.Person
     )
@@ -55,7 +55,7 @@ sealed class BottomBarNavGraphEntry(
     // for teams
     object Teams: BottomBarNavGraphEntry(
         route = "tl_teams",
-        title = R.string.action_teams,
+        title = R.string.action_decks,
         icon = Icons.Outlined.Group,
         iconFocused = Icons.Filled.Group
     )
@@ -69,7 +69,7 @@ fun BottomNavGraph (
 ) {
     NavHost(
         navController = navController,
-        startDestination = BottomBarNavGraphEntry.Persons.route,
+        startDestination = BottomBarNavGraphEntry.Cards.route,
         modifier = modifier
      ) {
         personsNavGraph(navController = navController)
@@ -81,7 +81,7 @@ fun BottomNavGraph (
 fun BottomBar(navController: NavHostController) {
 
     val screens = listOf(
-        BottomBarNavGraphEntry.Persons,
+        BottomBarNavGraphEntry.Cards,
         BottomBarNavGraphEntry.Teams
     )
 

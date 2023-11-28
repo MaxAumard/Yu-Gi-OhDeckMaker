@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.uha.hassenforder.android.kotlin.combine
-import fr.uha.hassenforder.team.model.Gender
-import fr.uha.hassenforder.team.model.Person
+import fr.uha.hassenforder.team.model.Type
+import fr.uha.hassenforder.team.model.Card
 import fr.uha.hassenforder.team.repository.PersonRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -24,7 +24,7 @@ class PersonViewModel @Inject constructor (
 
     @Immutable
     sealed interface PersonState {
-        data class Success (val person : Person) : PersonState
+        data class Success (val card : Card) : PersonState
         object Loading : PersonState
         object Error : PersonState
     }
@@ -46,7 +46,7 @@ class PersonViewModel @Inject constructor (
                 val errorId : Int? = PersonUIValidator.validatePhoneChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
-            fun buildGender(state : PersonUIState, newValue: Gender?): FieldWrapper<Gender?> {
+            fun buildGender(state : PersonUIState, newValue: Type?): FieldWrapper<Type?> {
                 val errorId : Int? = PersonUIValidator.validateGenderChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
@@ -60,7 +60,7 @@ class PersonViewModel @Inject constructor (
     private val _firstnameState = MutableStateFlow(FieldWrapper<String>())
     private val _lastnameState = MutableStateFlow(FieldWrapper<String>())
     private val _phoneState = MutableStateFlow(FieldWrapper<String>())
-    private val _genderState = MutableStateFlow(FieldWrapper<Gender?>())
+    private val _typeState = MutableStateFlow(FieldWrapper<Type?>())
     private val _pictureState = MutableStateFlow(FieldWrapper<Uri?>())
 
     private val _id: MutableStateFlow<Long> = MutableStateFlow(0)
@@ -70,12 +70,12 @@ class PersonViewModel @Inject constructor (
         .flatMapLatest { id -> repository.getPersonById(id) }
         .map {
             p -> if (p != null) {
-                _firstnameState.emit(FieldWrapper.buildFirstname(uiState.value, p.firstname))
-                _lastnameState.emit(FieldWrapper.buildLastname(uiState.value, p.lastname))
+                _firstnameState.emit(FieldWrapper.buildFirstname(uiState.value, p.name))
+                _lastnameState.emit(FieldWrapper.buildLastname(uiState.value, p.description))
                 _phoneState.emit(FieldWrapper.buildPhone(uiState.value, p.phone))
-                _genderState.emit(FieldWrapper.buildGender(uiState.value, p.gender))
+                _typeState.emit(FieldWrapper.buildGender(uiState.value, p.type))
                 _pictureState.emit(FieldWrapper.buildPicture(uiState.value, p.picture))
-                PersonState.Success(person = p)
+                PersonState.Success(card = p)
             } else {
                 PersonState.Error
             }
@@ -87,16 +87,16 @@ class PersonViewModel @Inject constructor (
         val firstnameState : FieldWrapper<String>,
         val lastnameState : FieldWrapper<String>,
         val phoneState : FieldWrapper<String>,
-        val genderState : FieldWrapper<Gender?>,
+        val typeState : FieldWrapper<Type?>,
         val pictureState : FieldWrapper<Uri?>,
     ) {
         private fun _isModified (): Boolean? {
             if (initialState !is PersonState.Success) return null
-            if (firstnameState.current != initialState.person.firstname) return true
-            if (lastnameState.current != initialState.person.lastname) return true
-            if (phoneState.current != initialState.person.phone) return true
-            if (genderState.current != initialState.person.gender) return true
-            if (pictureState.current != initialState.person.picture) return true
+            if (firstnameState.current != initialState.card.name) return true
+            if (lastnameState.current != initialState.card.description) return true
+            if (phoneState.current != initialState.card.phone) return true
+            if (typeState.current != initialState.card.type) return true
+            if (pictureState.current != initialState.card.picture) return true
             if (pictureState.current != null) return true
             return false
         }
@@ -105,7 +105,7 @@ class PersonViewModel @Inject constructor (
             if (firstnameState.errorId != null) return true
             if (lastnameState.errorId != null) return true
             if (phoneState.errorId != null) return true
-            if (genderState.errorId != null) return true
+            if (typeState.errorId != null) return true
             if (pictureState.errorId != null) return true
             return false
         }
@@ -126,7 +126,7 @@ class PersonViewModel @Inject constructor (
     }
 
     val uiState : StateFlow<PersonUIState> = combine (
-        _initialPersonState, _firstnameState, _lastnameState, _phoneState, _genderState, _pictureState
+        _initialPersonState, _firstnameState, _lastnameState, _phoneState, _typeState, _pictureState
     ) { i, f, l, p, g, a -> PersonUIState(i, f, l, p, g, a) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -144,7 +144,7 @@ class PersonViewModel @Inject constructor (
         data class FirstnameChanged(val newValue: String): UIEvent()
         data class LastnameChanged(val newValue: String): UIEvent()
         data class PhoneChanged(val newValue: String): UIEvent()
-        data class GenderChanged(val newValue: Gender): UIEvent()
+        data class GenderChanged(val newValue: Type): UIEvent()
         data class PictureChanged(val newValue: Uri?): UIEvent()
     }
 
@@ -159,7 +159,7 @@ class PersonViewModel @Inject constructor (
                     is UIEvent.FirstnameChanged -> _firstnameState.emit(FieldWrapper.buildFirstname(uiState.value, it.newValue))
                     is UIEvent.LastnameChanged -> _lastnameState.emit(FieldWrapper.buildLastname(uiState.value, it.newValue))
                     is UIEvent.PhoneChanged -> _phoneState.emit(FieldWrapper.buildPhone(uiState.value, it.newValue))
-                    is UIEvent.GenderChanged -> _genderState.emit(FieldWrapper.buildGender(uiState.value, it.newValue))
+                    is UIEvent.GenderChanged -> _typeState.emit(FieldWrapper.buildGender(uiState.value, it.newValue))
                     is UIEvent.PictureChanged -> _pictureState.emit(FieldWrapper.buildPicture(uiState.value, it.newValue))
                 }
             }
@@ -170,23 +170,23 @@ class PersonViewModel @Inject constructor (
         _id.emit(pid)
     }
 
-    fun create(person: Person) = viewModelScope.launch {
-        val pid : Long = repository.create(person)
+    fun create(card: Card) = viewModelScope.launch {
+        val pid : Long = repository.create(card)
         _id.emit(pid)
     }
 
     fun save() = viewModelScope.launch {
         if (_initialPersonState.value !is PersonState.Success) return@launch
         val oldPerson = _initialPersonState.value as PersonState.Success
-        val person = Person (
+        val card = Card (
             _id.value,
             _firstnameState.value.current!!,
             _lastnameState.value.current!!,
             _phoneState.value.current!!,
-            _genderState.value.current!!,
+            _typeState.value.current!!,
             _pictureState.value.current
         )
-        repository.update(oldPerson.person, person)
+        repository.update(oldPerson.card, card)
     }
 
 }

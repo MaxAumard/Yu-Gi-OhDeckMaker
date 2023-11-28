@@ -3,7 +3,7 @@ package fr.uha.hassenforder.team.navigation
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import fr.uha.hassenforder.team.R
-import fr.uha.hassenforder.team.model.Team
+import fr.uha.hassenforder.team.model.Deck
 import fr.uha.hassenforder.team.ui.team.CreateTeamScreen
 import fr.uha.hassenforder.team.ui.team.EditTeamScreen
 import fr.uha.hassenforder.team.ui.team.ListTeamsScreen
@@ -16,7 +16,7 @@ private sealed class TeamNavGraphEntry(
     // to list all teams
     object Teams: TeamNavGraphEntry(
         route = "teams",
-        title = R.string.action_teams,
+        title = R.string.action_decks,
     )
 
     // to create a team
@@ -27,11 +27,11 @@ private sealed class TeamNavGraphEntry(
 
     // to edit a team
     object Edit: TeamNavGraphEntry(
-        route = "team/{tid}",
+        route = "team/{did}",
         title = R.string.action_team_edit,
     ) {
         fun to (tid : Long) : String {
-            return route.replace("{tid}", tid.toString())
+            return route.replace("{did}", tid.toString())
         }
     }
 
@@ -44,7 +44,7 @@ fun NavGraphBuilder.teamsNavGraph (
         composable(route = TeamNavGraphEntry.Teams.route) {
             ListTeamsScreen(
                 onCreate = { navController.navigate(TeamNavGraphEntry.Create.route) },
-                onEdit = { t : Team -> navController.navigate(TeamNavGraphEntry.Edit.to(t.tid)) }
+                onEdit = { t : Deck -> navController.navigate(TeamNavGraphEntry.Edit.to(t.did)) }
             )
         }
         composable(route = TeamNavGraphEntry.Create.route) {
@@ -52,10 +52,10 @@ fun NavGraphBuilder.teamsNavGraph (
         }
         composable(
             route = TeamNavGraphEntry.Edit.route,
-            arguments = listOf(navArgument("tid") { type = NavType.LongType })
+            arguments = listOf(navArgument("did") { type = NavType.LongType })
         ) {
             backStackEntry ->
-            EditTeamScreen(tid = backStackEntry.arguments?.getLong("tid")!!, back = { navController.popBackStack() } )
+            EditTeamScreen(tid = backStackEntry.arguments?.getLong("did")!!, back = { navController.popBackStack() } )
         }
     }
 }

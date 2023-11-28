@@ -9,7 +9,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,10 +19,6 @@ import fr.uha.hassenforder.android.ui.AppMenuEntry
 import fr.uha.hassenforder.android.ui.ErrorScreen
 import fr.uha.hassenforder.android.ui.LoadingScreen
 import fr.uha.hassenforder.android.ui.AppTitle
-import fr.uha.hassenforder.team.database.TeamDatabase
-import fr.uha.hassenforder.team.model.Gender
-import fr.uha.hassenforder.team.model.Person
-import fr.uha.hassenforder.team.repository.PersonRepository
 
 import fr.uha.hassenforder.team.R
 

@@ -4,43 +4,41 @@ class Comparators {
 
     companion object {
 
-        fun shallowEqualsPerson(oldPerson: Person?, newPerson: Person?): Boolean {
-            if (oldPerson == null && newPerson == null) return true
-            if (oldPerson != null && newPerson == null) return false
-            if (oldPerson == null && newPerson != null) return false
-            oldPerson as Person
-            newPerson as Person
-            if (oldPerson.pid != newPerson.pid) return false
+        fun shallowEqualsPerson(oldCard: Card?, newCard: Card?): Boolean {
+            if (oldCard == null && newCard == null) return true
+            if (oldCard != null && newCard == null) return false
+            if (oldCard == null && newCard != null) return false
+            oldCard as Card
+            newCard as Card
+            if (oldCard.cid != newCard.cid) return false
             return true
         }
 
-        fun shallowEqualsListPersons(oldPersons: List<Person>?, newPersons: List<Person>?): Boolean {
-            if (oldPersons == null && newPersons == null) return true
-            if (oldPersons != null && newPersons == null) return false
-            if (oldPersons == null && newPersons != null) return false
-            oldPersons as List<Person>
-            newPersons as List<Person>
-            if (oldPersons.size != newPersons.size) return false
+        fun shallowEqualsListPersons(oldCards: List<Card>?, newCards: List<Card>?): Boolean {
+            if (oldCards == null && newCards == null) return true
+            if (oldCards != null && newCards == null) return false
+            if (oldCards == null && newCards != null) return false
+            oldCards as List<Card>
+            newCards as List<Card>
+            if (oldCards.size != newCards.size) return false
             val oldMap = mutableSetOf<Long>()
-            oldPersons.forEach { p -> oldMap.add(p.pid) }
-            newPersons.forEach { p -> if (! oldMap.contains(p.pid)) return false }
+            oldCards.forEach { p -> oldMap.add(p.cid) }
+            newCards.forEach { p -> if (! oldMap.contains(p.cid)) return false }
             val newMap = mutableSetOf<Long>()
-            newPersons.forEach { p -> newMap.add(p.pid) }
-            oldPersons.forEach { p -> if (! newMap.contains(p.pid)) return false }
+            newCards.forEach { p -> newMap.add(p.cid) }
+            oldCards.forEach { p -> if (! newMap.contains(p.cid)) return false }
             return true
         }
 
-        fun shallowEqualsTeam(oldTeam: Team?, newTeam: Team?): Boolean {
-            if (newTeam == null && oldTeam == null) return true
-            if (newTeam != null && oldTeam == null) return false
-            if (newTeam == null && oldTeam != null) return false
-            val safeNew : Team = newTeam as Team
-            val safeOld : Team = oldTeam as Team
-            if (safeNew.tid != safeOld.tid) return false
+        fun shallowEqualsTeam(oldDeck: Deck?, newDeck: Deck?): Boolean {
+            if (newDeck == null && oldDeck == null) return true
+            if (newDeck != null && oldDeck == null) return false
+            if (newDeck == null && oldDeck != null) return false
+            val safeNew : Deck = newDeck as Deck
+            val safeOld : Deck = oldDeck as Deck
+            if (safeNew.did != safeOld.did) return false
             if (safeNew.name != safeOld.name) return false
-            if (safeNew.startDay != safeOld.startDay) return false
-            if (safeNew.duration != safeOld.duration) return false
-            if (safeNew.leaderId != safeOld.leaderId) return false
+            if (safeNew.creationDate != safeOld.creationDate) return false
             return true
         }
 

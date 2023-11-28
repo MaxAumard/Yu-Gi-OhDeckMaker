@@ -8,9 +8,9 @@
     <string name="error">Error loading content</string>
     <string name="person_create">Create Person</string>
     <string name="save">save</string>
-    <string name="person_list">List of Persons</string>
-    <string name="action_persons">persons route</string>
-    <string name="action_teams">teams route</string>
+    <string name="card_list">List of Cards</string>
+    <string name="action_cards">cards route</string>
+    <string name="action_decks">decks route</string>
     <string name="action_team_create">Create Team</string>
     <string name="action_team_edit">Edit Team</string>
     <string name="person_edit">Person edit</string>

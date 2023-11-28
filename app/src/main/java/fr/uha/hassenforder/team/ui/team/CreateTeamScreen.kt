@@ -14,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.uha.hassenforder.android.ui.*
 import fr.uha.hassenforder.team.R
-import fr.uha.hassenforder.team.model.Team
+import fr.uha.hassenforder.team.model.Deck
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,7 +27,7 @@ fun CreateTeamScreen(
 
     LaunchedEffect(vm.isLaunched) {
         if(!vm.isLaunched) {
-            vm.create(Team())
+            vm.create(Deck())
             vm.isLaunched = true
         }
     }

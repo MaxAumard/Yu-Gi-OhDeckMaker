@@ -27,14 +27,14 @@ import fr.uha.hassenforder.android.ui.AppMenuEntry
 import fr.uha.hassenforder.android.ui.AppTitle
 import fr.uha.hassenforder.android.ui.SwipeableItem
 import fr.uha.hassenforder.team.R
-import fr.uha.hassenforder.team.model.Team
+import fr.uha.hassenforder.team.model.Deck
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListTeamsScreen(
     vm : ListTeamsViewModel = hiltViewModel(),
     onCreate : () -> Unit,
-    onEdit : (p : Team) -> Unit,
+    onEdit : (p : Deck) -> Unit,
 ) {
     val teams = vm.teams.collectAsStateWithLifecycle(initialValue = emptyList())
 
@@ -61,7 +61,7 @@ fun ListTeamsScreen(
         innerPadding -> LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items (
                 items = teams.value,
-                key = { team -> team.tid }
+                key = { team -> team.did }
             ) {
                 item -> SwipeableItem (
                     onEdit = { onEdit(item) },
@@ -76,18 +76,18 @@ fun ListTeamsScreen(
 }
 
 @Composable
-fun teamItem(team : Team) {
+fun teamItem(deck : Deck) {
 
     ListItem (
         headlineContent = {
-            Text(team.name)
+            Text(deck.name)
         },
         supportingContent = {
             Row () {
                 Icon(imageVector = Icons.Outlined.Start, contentDescription = null)
-                Text(UIConverter.convert(team.startDay), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 4.dp))
+                Text(UIConverter.convert(deck.creationDate), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 4.dp))
                 Icon(imageVector = Icons.Outlined.Timer, contentDescription = null)
-                Text(UIConverter.convert(team.startDay), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 4.dp))
+                Text(UIConverter.convert(deck.creationDate), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 4.dp))
             }
         }
     )

@@ -12,7 +12,7 @@ import fr.uha.hassenforder.android.ui.OutlinedEnumRadioGroup
 import fr.uha.hassenforder.android.ui.PictureField
 import fr.uha.hassenforder.team.R
 import fr.uha.hassenforder.team.TeamFileProvider
-import fr.uha.hassenforder.team.model.Gender
+import fr.uha.hassenforder.team.model.Type
 
 @Composable
 fun SuccessPersonScreen(
@@ -48,12 +48,12 @@ fun SuccessPersonScreen(
             isError = person.phoneState.errorId != null,
         )
         OutlinedEnumRadioGroup(
-            value = person.genderState.current,
-            onValueChange = { uiCB.onEvent(PersonViewModel.UIEvent.GenderChanged(Gender.valueOf(it))) },
+            value = person.typeState.current,
+            onValueChange = { uiCB.onEvent(PersonViewModel.UIEvent.GenderChanged(Type.valueOf(it))) },
             modifier = Modifier.fillMaxWidth(),
-            items = Gender.values(),
+            items = Type.values(),
             labelId = R.string.gender,
-            errorId = person.genderState.errorId,
+            errorId = person.typeState.errorId,
         )
         PictureField(
             value = person.pictureState.current,

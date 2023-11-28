@@ -1,37 +1,36 @@
 package fr.uha.hassenforder.team.repository
 
 import fr.uha.hassenforder.team.database.PersonDao
-import fr.uha.hassenforder.team.model.Person
-import fr.uha.hassenforder.team.model.PersonWithDetails
+import fr.uha.hassenforder.team.model.Card
+import fr.uha.hassenforder.team.model.CardWithDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 
 class PersonRepository(private val personDao: PersonDao)
 {
-    fun getAll () : Flow<List<PersonWithDetails>> {
+    fun getAll () : Flow<List<CardWithDetails>> {
         return personDao.getAllWithDetails()
     }
 
-    fun getPersonById (id : Long) : Flow<Person?> {
-        return personDao.getPersonById(id)
+    fun getPersonById (id : Long) : Flow<Card?> {
+        return personDao.getCardById(id)
     }
 
-    suspend fun create (person : Person) : Long = withContext(Dispatchers.IO) {
-        return@withContext personDao.create(person)
+    suspend fun create (card : Card) : Long = withContext(Dispatchers.IO) {
+        return@withContext personDao.create(card)
     }
 
-    suspend fun update (oldPerson : Person, person : Person) : Long = withContext(Dispatchers.IO) {
-        return@withContext personDao.update(person)
+    suspend fun update (oldCard : Card, card : Card) : Long = withContext(Dispatchers.IO) {
+        return@withContext personDao.update(card)
     }
 
-    suspend fun upsert (person : Person) : Long = withContext(Dispatchers.IO) {
-        return@withContext personDao.upsert(person)
+    suspend fun upsert (card : Card) : Long = withContext(Dispatchers.IO) {
+        return@withContext personDao.upsert(card)
     }
 
-    suspend fun delete (person : Person) = withContext(Dispatchers.IO) {
-        personDao.delete(person)
+    suspend fun delete (card : Card) = withContext(Dispatchers.IO) {
+        personDao.delete(card)
     }
 
 }

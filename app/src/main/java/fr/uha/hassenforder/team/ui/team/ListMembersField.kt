@@ -20,16 +20,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.uha.hassenforder.android.ui.SwipeableItem
 import fr.uha.hassenforder.team.R
-import fr.uha.hassenforder.team.model.Person
+import fr.uha.hassenforder.team.model.Card
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListMembersField(
-    value : List<Person>?,
+    value : List<Card>?,
     modifier : Modifier = Modifier,
     @StringRes label: Int? = null,
     onAdd: (pid : Long) -> Unit,
-    onDelete: (person : Person) -> Unit,
+    onDelete: (card : Card) -> Unit,
     errorId : Int?,
 ) {
     val showDialog = remember { mutableStateOf(false) }
@@ -37,7 +37,7 @@ fun ListMembersField(
     if (showDialog.value) {
         PersonPicker(
             title = R.string.member_select,
-            onSelect = { showDialog.value = false; if (it != null) onAdd(it.pid) }
+            onSelect = { showDialog.value = false; if (it != null) onAdd(it.cid) }
         )
     }
 
@@ -70,13 +70,13 @@ fun ListMembersField(
                 ) {
                     items(
                         items = value?: listOf(),
-                        key = { person : Person -> person.pid }
-                    ) { item : Person ->
+                        key = { card : Card -> card.cid }
+                    ) { item : Card ->
                         Divider(color = MaterialTheme.colorScheme.onBackground)
                         SwipeableItem(
                             onDelete = { onDelete(item) }
                         ) {
-                            TeamPersonItem(item)
+                            TeamCardItem(item)
                         }
                     }
                 }

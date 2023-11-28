@@ -6,46 +6,45 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import fr.uha.hassenforder.team.model.FullTeam
-import fr.uha.hassenforder.team.model.Person
-import fr.uha.hassenforder.team.model.Team
-import fr.uha.hassenforder.team.model.TeamPersonAssociation
+import fr.uha.hassenforder.team.model.FullDeck
+import fr.uha.hassenforder.team.model.Deck
+import fr.uha.hassenforder.team.model.DeckCardAssociation
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TeamDao {
 
-    @Query("SELECT * FROM teams")
-    fun getAll () : Flow<List<Team>>
+    @Query("SELECT * FROM decks")
+    fun getAll () : Flow<List<Deck>>
 
-    @Query("SELECT * FROM teams WHERE tid = :id")
+    @Query("SELECT * FROM decks WHERE did = :id")
     @Transaction
-    fun getTeamById (id : Long) : Flow<FullTeam?>
+    fun getTeamById (id : Long) : Flow<FullDeck?>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun create (team : Team) : Long
+    suspend fun create (deck : Deck) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun update (team : Team) : Long
+    fun update (deck : Deck) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun upsert (team : Team) : Long
+    fun upsert (deck : Deck) : Long
 
     @Delete
-    fun delete (team : Team)
+    fun delete (deck : Deck)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addTeamPerson(member: TeamPersonAssociation)
+    suspend fun addTeamPerson(member: DeckCardAssociation)
 
     @Delete
-    suspend fun removeTeamPerson(member: TeamPersonAssociation)
+    suspend fun removeTeamPerson(member: DeckCardAssociation)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addTeamPerson(members: List<TeamPersonAssociation>)
+    suspend fun addTeamPerson(members: List<DeckCardAssociation>)
 
     @Delete
-    suspend fun removeTeamPerson(members: List<TeamPersonAssociation>)
+    suspend fun removeTeamPerson(members: List<DeckCardAssociation>)
 
-    @Query ("DELETE FROM tpas WHERE tid = :tid")
+    @Query ("DELETE FROM tpas WHERE did = :tid")
     fun deleteTeamPersons(tid: Long)
 }

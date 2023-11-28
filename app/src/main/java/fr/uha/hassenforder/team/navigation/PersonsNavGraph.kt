@@ -3,7 +3,7 @@ package fr.uha.hassenforder.team.navigation
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import fr.uha.hassenforder.team.R
-import fr.uha.hassenforder.team.model.Person
+import fr.uha.hassenforder.team.model.Card
 import fr.uha.hassenforder.team.ui.person.CreatePersonScreen
 import fr.uha.hassenforder.team.ui.person.EditPersonScreen
 import fr.uha.hassenforder.team.ui.person.ListPersonsScreen
@@ -16,7 +16,7 @@ private sealed class PersonNavGraphEntry(
     // to list all persons
     object Persons: PersonNavGraphEntry(
         route = "persons",
-        title = R.string.action_persons,
+        title = R.string.action_cards,
     )
 
     // to create a person
@@ -27,11 +27,11 @@ private sealed class PersonNavGraphEntry(
 
     // to edit a person
     object Edit: PersonNavGraphEntry(
-        route = "person/{pid}",
+        route = "person/{cid}",
         title = R.string.action_person_edit,
     ) {
         fun to (pid : Long) : String {
-            return route.replace("{pid}", pid.toString())
+            return route.replace("{cid}", pid.toString())
         }
     }
 
@@ -40,11 +40,11 @@ private sealed class PersonNavGraphEntry(
 fun NavGraphBuilder.personsNavGraph (
     navController: NavHostController
 ) {
-    navigation(PersonNavGraphEntry.Persons.route, BottomBarNavGraphEntry.Persons.route) {
+    navigation(PersonNavGraphEntry.Persons.route, BottomBarNavGraphEntry.Cards.route) {
         composable(route = PersonNavGraphEntry.Persons.route) {
             ListPersonsScreen(
                 onCreate = { navController.navigate(PersonNavGraphEntry.Create.route) },
-                onEdit = { p : Person -> navController.navigate(PersonNavGraphEntry.Edit.to(p.pid)) }
+                onEdit = { p : Card -> navController.navigate(PersonNavGraphEntry.Edit.to(p.cid)) }
             )
         }
         composable(route = PersonNavGraphEntry.Create.route) {
@@ -52,10 +52,10 @@ fun NavGraphBuilder.personsNavGraph (
         }
         composable(
             route = PersonNavGraphEntry.Edit.route,
-            arguments = listOf(navArgument("pid") { type = NavType.LongType })
+            arguments = listOf(navArgument("cid") { type = NavType.LongType })
         ) {
             backStackEntry ->
-            EditPersonScreen(pid = backStackEntry.arguments?.getLong("pid")!!, back = { navController.popBackStack() } )
+            EditPersonScreen(pid = backStackEntry.arguments?.getLong("cid")!!, back = { navController.popBackStack() } )
         }
     }
 }
