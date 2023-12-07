@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "fr.uha.hassenforder.android"
+    namespace = "fr.uha.aumard.android"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 27
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {

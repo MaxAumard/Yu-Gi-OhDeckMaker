@@ -13,7 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Team 2023"
+rootProject.name = "DeckBuilder"
 include(":app")
 include(":android")
 include(":team-helpers")

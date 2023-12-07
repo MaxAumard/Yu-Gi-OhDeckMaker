@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="fr.uha.aumard.deckbuilder">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".TeamApplication"
+
+        android:name=".DeckBuilderApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -27,7 +31,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="fr.uha.hassenforder.team.fileprovider"
+            android:authorities="fr.uha.aumard.deckbuilder.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -37,5 +41,4 @@
         </provider>
 
     </application>
-
 </manifest>
