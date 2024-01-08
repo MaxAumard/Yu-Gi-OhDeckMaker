@@ -8,31 +8,31 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import fr.uha.aumard.deckbuilder.R
 import fr.uha.aumard.deckbuilder.model.Deck
-import fr.uha.aumard.deckbuilder.ui.deck.CreateTeamScreen
-import fr.uha.aumard.deckbuilder.ui.deck.EditTeamScreen
-import fr.uha.aumard.deckbuilder.ui.deck.ListTeamsScreen
+import fr.uha.aumard.deckbuilder.ui.deck.CreateDeckScreen
+import fr.uha.aumard.deckbuilder.ui.deck.EditDeckScreen
+import fr.uha.aumard.deckbuilder.ui.deck.ListDecksScreen
 
 private sealed class TeamNavGraphEntry(
     val route: String,
     val title: Int,
 ) {
 
-    // to list all teams
+    // to list all decks
     object Teams: TeamNavGraphEntry(
-        route = "teams",
+        route = "decks",
         title = R.string.action_decks,
     )
 
-    // to create a team
+    // to create a deckBuilder
     object Create: TeamNavGraphEntry(
-        route = "team",
-        title = R.string.action_team_create,
+        route = "deckBuilder",
+        title = R.string.action_deck_create,
     )
 
-    // to edit a team
+    // to edit a deckBuilder
     object Edit: TeamNavGraphEntry(
-        route = "team/{did}",
-        title = R.string.action_team_edit,
+        route = "deckBuilder/{did}",
+        title = R.string.action_deck_edit,
     ) {
         fun to (tid : Long) : String {
             return route.replace("{did}", tid.toString())
@@ -46,20 +46,20 @@ fun NavGraphBuilder.teamsNavGraph (
 ) {
     navigation(TeamNavGraphEntry.Teams.route, BottomBarNavGraphEntry.Teams.route) {
         composable(route = TeamNavGraphEntry.Teams.route) {
-            ListTeamsScreen(
+            ListDecksScreen(
                 onCreate = { navController.navigate(TeamNavGraphEntry.Create.route) },
                 onEdit = { t : Deck -> navController.navigate(TeamNavGraphEntry.Edit.to(t.did)) }
             )
         }
         composable(route = TeamNavGraphEntry.Create.route) {
-            CreateTeamScreen (back = { navController.popBackStack() } )
+            CreateDeckScreen (back = { navController.popBackStack() } )
         }
         composable(
             route = TeamNavGraphEntry.Edit.route,
             arguments = listOf(navArgument("did") { type = NavType.LongType })
         ) {
             backStackEntry ->
-            EditTeamScreen(tid = backStackEntry.arguments?.getLong("did")!!, back = { navController.popBackStack() } )
+            EditDeckScreen(tid = backStackEntry.arguments?.getLong("did")!!, back = { navController.popBackStack() } )
         }
     }
 }

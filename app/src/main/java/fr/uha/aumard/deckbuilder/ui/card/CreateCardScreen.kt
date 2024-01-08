@@ -64,7 +64,7 @@ fun CreateCardScreen(
                 title = {
                     AppTitle(
                         appNameId = R.string.app_name,
-                        pageTitleId = R.string.person_create,
+                        pageTitleId = R.string.card_create,
                         isModified = state.isModified()
                     )
                 },

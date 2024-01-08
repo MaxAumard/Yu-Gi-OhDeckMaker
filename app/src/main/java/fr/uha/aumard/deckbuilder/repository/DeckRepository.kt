@@ -23,7 +23,7 @@ class DeckRepository(
         return deckDao.getDeckById(id)
     }
 
-    fun getPersonById(id: Long): Flow<Card?> {
+    fun getCardById(id: Long): Flow<Card?> {
         return cardDao.getCardById(id)
     }
 
@@ -53,8 +53,8 @@ class DeckRepository(
                     return DeckCardAssociation(DeckId, input.cid)
                 }
             }
-        val oldList = oldDeck.members
-        val newList = newDeck.members
+        val oldList = oldDeck.cards
+        val newList = newDeck.cards
         delta.calculate(oldList, newList)
 
         if (deckToSave != null) deckDao.upsert(deckToSave)

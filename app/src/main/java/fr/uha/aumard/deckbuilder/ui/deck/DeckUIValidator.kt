@@ -8,7 +8,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
 
-object TeamUIValidator {
+object DeckUIValidator {
 
     fun validateNameChange(newValue: String) : Int? {
         return when {
@@ -52,7 +52,7 @@ object TeamUIValidator {
         return null
     }
 
-    fun validateMembersChange(state: DeckViewModel.TeamUIState, newValue: List<Card>?): Int? {
+    fun validateMembersChange(state: DeckViewModel.DeckUIState, newValue: List<Card>?): Int? {
         if (newValue == null) return R.string.members_not_empty
         val size = newValue.size
         return when {

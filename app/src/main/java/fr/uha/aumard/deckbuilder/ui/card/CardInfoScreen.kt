@@ -45,22 +45,22 @@ fun CardInfoScreen(
                 Column {
                     Text(
                         text = c.name,
-                        style = MaterialTheme.typography.title2, // Larger text for the card name
-                        modifier = Modifier.padding(bottom = 8.dp) // Padding below the card name
+                        style = MaterialTheme.typography.title2,
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
                     LevelStars(level = c.level)
-                    Spacer(modifier = Modifier.height(4.dp)) // Spacer between elements
+                    Spacer(modifier = Modifier.height(4.dp))
                     c.attack?.let { attack -> Text(stringResource(R.string.card_attack, attack)) }
-                    Spacer(modifier = Modifier.height(4.dp)) // Spacer between elements
+                    Spacer(modifier = Modifier.height(4.dp))
                     c.defense?.let { defense -> Text(stringResource(R.string.card_defense, defense)) }
-                    Spacer(modifier = Modifier.height(4.dp)) // Spacer between elements
+                    Spacer(modifier = Modifier.height(4.dp))
                     ExtraMainDeckIcon(isExtraDeck = c.isExtraDeck)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = c.description)
         }
-    } ?: Text(stringResource(R.string.loading_card_details)) // Show loading or not found message
+    } ?: Text(stringResource(R.string.loading_card_details))
 }
 
 

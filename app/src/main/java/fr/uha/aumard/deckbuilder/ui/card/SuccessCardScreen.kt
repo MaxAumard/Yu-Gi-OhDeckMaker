@@ -43,7 +43,7 @@ fun SuccessPersonScreen(
             value = card.descriptionState.current ?: "",
             onValueChange = { uiCB.onEvent(CardViewModel.UIEvent.LevelChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text(stringResource(id = R.string.phone)) },
+            label = { Text(stringResource(id = R.string.description)) },
             supportingText = { if (card.descriptionState.errorId != null) Text(stringResource(id = card.descriptionState.errorId)) },
             isError = card.descriptionState.errorId != null,
         )
@@ -52,7 +52,7 @@ fun SuccessPersonScreen(
             onValueChange = { uiCB.onEvent(CardViewModel.UIEvent.TypeChanged(Type.valueOf(it))) },
             modifier = Modifier.fillMaxWidth(),
             items = Type.values(),
-            labelId = R.string.gender,
+            labelId = R.string.type,
             errorId = card.typeState.errorId,
         )
         PictureField(

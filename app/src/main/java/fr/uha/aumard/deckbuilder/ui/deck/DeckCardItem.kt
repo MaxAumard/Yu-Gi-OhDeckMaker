@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Casino
 import androidx.compose.material.icons.outlined.Error
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -20,18 +21,17 @@ import coil.compose.AsyncImage
 import fr.uha.aumard.deckbuilder.model.Card
 
 @Composable
-fun TeamCardItem (card : Card) {
+fun DeckCardItem (card : Card) {
     ListItem (
         headlineContent = {
             Row() {
                 Text(card.name, modifier = Modifier.padding(end = 8.dp))
-                Text(card.description)
             }
         },
         supportingContent = {
             Row() {
                 Icon(
-                    imageVector = Icons.Outlined.Phone,
+                    imageVector = Icons.Outlined.KeyboardArrowUp,
                     contentDescription = "level",
                     modifier = Modifier.padding(end = 8.dp)
                 )

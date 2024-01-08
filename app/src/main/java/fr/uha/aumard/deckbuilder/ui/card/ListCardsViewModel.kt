@@ -15,10 +15,15 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class ListCardsViewModel @Inject constructor(private val repository: CardRepository) : ViewModel() {
+class ListCardsViewModel @Inject constructor(
+    private val repository: CardRepository
+) : ViewModel() {
     private var currentPage = 0
-    private val pageSize = 21
+    private val pageSize = 21 // Adjust the page size as needed
     private var isLoading = false
+
+    // Filter and search properties
+    private val currentSearchQuery = MutableStateFlow("")
 
     private val _cards = MutableStateFlow<List<Card>>(emptyList())
     val cards: StateFlow<List<Card>> = _cards.asStateFlow()
@@ -27,15 +32,16 @@ class ListCardsViewModel @Inject constructor(private val repository: CardReposit
         loadMoreCards()
     }
 
-    fun loadMoreCards(searchQuery: String = "") {
+    fun loadMoreCards() {
         if (isLoading) return
 
         isLoading = true
         viewModelScope.launch {
-            val newCards = if (searchQuery.isEmpty()) {
+            val query = currentSearchQuery.value
+            val newCards = if (query.isEmpty()) {
                 repository.getCardsPage(currentPage, pageSize)
             } else {
-                repository.getCardsPageFiltered(currentPage, pageSize, searchQuery)
+                repository.getCardsPageFiltered(currentPage, pageSize, query)
             }
             newCards.collect { cards ->
                 _cards.value = _cards.value + cards
@@ -44,7 +50,6 @@ class ListCardsViewModel @Inject constructor(private val repository: CardReposit
             }
         }
     }
-
     fun feed() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             FeedDatabase().populate()
@@ -56,11 +61,25 @@ class ListCardsViewModel @Inject constructor(private val repository: CardReposit
             FeedDatabase().clear()
         }
     }
+
     fun delete(card: Card) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             repository.delete(card)
         }
     }
+
+    fun updateSearchQuery(query: String) {
+        currentSearchQuery.value = query
+        resetPaginationAndLoad()
+    }
+
+    private fun resetPaginationAndLoad() {
+        currentPage = 0
+        _cards.value = emptyList()
+        isLoading = false
+        loadMoreCards() // Use the current search query
+    }
+
 
     val persons = repository.getAll()
 

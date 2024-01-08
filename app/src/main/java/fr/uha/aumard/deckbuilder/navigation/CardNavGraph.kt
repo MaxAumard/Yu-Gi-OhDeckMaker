@@ -10,14 +10,14 @@ import androidx.navigation.navigation
 import fr.uha.aumard.deckbuilder.R
 import fr.uha.aumard.deckbuilder.model.Card
 import fr.uha.aumard.deckbuilder.ui.card.CreateCardScreen
-import fr.uha.aumard.deckbuilder.ui.card.ListPersonsScreen
+import fr.uha.aumard.deckbuilder.ui.card.ListCardsScreen
 
 private sealed class CardNavGraphEntry(
     val route: String,
     val title: Int,
 ) {
 
-    // to list all persons
+    // to list all cards
     object Cards : CardNavGraphEntry(
         route = "cards",
         title = R.string.action_cards,
@@ -46,7 +46,7 @@ fun NavGraphBuilder.personsNavGraph(
 ) {
     navigation(CardNavGraphEntry.Cards.route, BottomBarNavGraphEntry.Cards.route) {
         composable(route = CardNavGraphEntry.Cards.route) {
-            ListPersonsScreen(
+            ListCardsScreen(
                 onCreate = { navController.navigate(CardNavGraphEntry.Create.route) },
                 onCardClick = { c: Card -> navController.navigate(CardNavGraphEntry.Show.to(c.cid)) }
             )

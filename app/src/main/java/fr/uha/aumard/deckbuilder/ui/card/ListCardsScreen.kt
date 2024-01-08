@@ -1,8 +1,8 @@
 package fr.uha.aumard.deckbuilder.ui.card
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -10,11 +10,13 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Casino
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -31,76 +33,98 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import fr.uha.aumard.android.ui.AppMenu
-import fr.uha.aumard.android.ui.AppMenuEntry
 import fr.uha.aumard.android.ui.AppTitle
-import fr.uha.aumard.android.ui.SwipeableItem
 import fr.uha.aumard.deckbuilder.R
 import fr.uha.aumard.deckbuilder.model.Card
 import fr.uha.aumard.deckbuilder.model.Type
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListPersonsScreen(
+fun ListCardsScreen(
     vm: ListCardsViewModel = hiltViewModel(),
-    onCreate: () -> Unit,
-    onCardClick: (p: Card) -> Unit,
+    onCreate: () -> Unit = {},
+    onCardClick: (Card) -> Unit = {},
+    isPickerMode: Boolean = false,
+    onCardPicked: (Card) -> Unit = {}
 ) {
     val cards by vm.cards.collectAsStateWithLifecycle()
     var selectedFilter by remember { mutableStateOf(Type.ALL) }
+    var searchQuery by remember { mutableStateOf("") }
+    var isSearchVisible by remember { mutableStateOf(false) }
+
     val filteredCards = when (selectedFilter) {
         Type.ALL -> cards
         else -> cards.filter { it.type == selectedFilter }
     }
 
-    // Add this line to create a state for the search query
-    var searchQuery by remember { mutableStateOf("") }
-
-    val menuEntries = listOf(
-        AppMenuEntry.OverflowEntry(title = R.string.populate, listener = { vm.feed() }),
-        AppMenuEntry.OverflowEntry(title = R.string.clean, listener = { vm.clean() })
-    )
-
-    Scaffold(topBar = {
-        TopAppBar(title = {
-            AppTitle(pageTitleId = R.string.card_list)
-        }, actions = { AppMenu(entries = menuEntries) })
-    }, floatingActionButton = {
-        FloatingActionButton(onClick = onCreate) {
-            Icon(imageVector = Icons.Filled.Add, contentDescription = null)
-        }
-    }) { innerPadding ->
-        Column {
-            // Add this TextField as the search bar
-            TextField(
-                value = searchQuery,
-                onValueChange = { newValue ->
-                    searchQuery = newValue
-                    vm.loadMoreCards(searchQuery) // Call loadMoreCards with the new search query
-                },
-                label = { Text("Search") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { if (!isSearchVisible) AppTitle(pageTitleId = R.string.card_list) },
+                actions = {
+                    if (isSearchVisible) {
+                        SearchBar(searchQuery) { query ->
+                            searchQuery = query
+                            vm.updateSearchQuery(query)
+                        }
+                    } else {
+                        IconButton(onClick = { isSearchVisible = true }) {
+                            Icon(Icons.Default.Search, contentDescription = "Search")
+                        }
+                    }
+                }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onCreate) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+            }
         }
+    ) { innerPadding ->
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(3),
             modifier = Modifier.padding(innerPadding),
-            horizontalArrangement = Arrangement.spacedBy(4.dp), // Horizontal spacing between items
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             items(filteredCards) { card ->
-                SwipeableItem(
-                    onDelete = { vm.delete(card) }) {
+                if (isPickerMode) {
+                    Log.d("TEST","Card selected : $card")
+                    CardItem(
+                        card,
+                        onCardClick = { onCardPicked(card) })
+                } else {
                     CardItem(card, onCardClick)
                 }
             }
-
             item {
-                LoadMoreIndicator(onLoadMore = { vm.loadMoreCards(searchQuery) })
+                LoadMoreIndicator { vm.loadMoreCards() }
+            }
+
+            items(filteredCards) { card ->
+                Log.d("TEST","Card added : $card")
+
+                if (isPickerMode) {
+                    Log.d("TEST","Card selected : $card")
+                    CardItem(
+                        card,
+                        onCardClick = { onCardPicked(card) })
+                } else {
+                    CardItem(card, onCardClick)
+                }
             }
         }
     }
+}
+
+@Composable
+fun SearchBar(searchQuery: String, onSearchChanged: (String) -> Unit) {
+    TextField(
+        value = searchQuery,
+        onValueChange = onSearchChanged,
+        singleLine = true,
+        placeholder = { Text("Search cards") },
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -110,7 +134,7 @@ fun LoadMoreIndicator(onLoadMore: () -> Unit) {
 }
 
 @Composable
-fun CardItem(card: Card, onCardClick: (p: Card) -> Unit) {
+fun CardItem(card: Card, onCardClick: (c: Card) -> Unit) {
     if (card.picture != null) {
         AsyncImage(
             model = card.picture,

@@ -9,5 +9,5 @@ class FullDeck (
         val deck: Deck,
 
         @Relation(parentColumn = "did", entityColumn = "cid", associateBy = Junction(DeckCardAssociation::class))
-        val members: List<Card>,
+        val cards: List<Card>,
 )

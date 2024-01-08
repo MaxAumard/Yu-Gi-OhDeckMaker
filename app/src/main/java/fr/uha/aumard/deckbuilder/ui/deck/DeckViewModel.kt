@@ -9,12 +9,14 @@ import fr.uha.aumard.deckbuilder.model.Comparators
 import fr.uha.aumard.deckbuilder.model.Deck
 import fr.uha.aumard.deckbuilder.model.FullDeck
 import fr.uha.aumard.deckbuilder.repository.DeckRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class DeckViewModel @Inject constructor(
     private val repository: DeckRepository
@@ -23,10 +25,10 @@ class DeckViewModel @Inject constructor(
     var isLaunched: Boolean = false
 
     @Immutable
-    sealed interface TeamState {
-        data class Success(val team: FullDeck) : TeamState
-        object Loading : TeamState
-        object Error : TeamState
+    sealed interface DeckState {
+        data class Success(val deckBuilder: FullDeck) : DeckState
+        object Loading : DeckState
+        object Error : DeckState
     }
 
     data class FieldWrapper<T>(
@@ -34,28 +36,28 @@ class DeckViewModel @Inject constructor(
         val errorId: Int? = null
     ) {
         companion object {
-            fun buildName(state : TeamUIState, newValue: String): FieldWrapper<String> {
-                val errorId : Int? = TeamUIValidator.validateNameChange(newValue)
+            fun buildName(state : DeckUIState, newValue: String): FieldWrapper<String> {
+                val errorId : Int? = DeckUIValidator.validateNameChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
 
-            fun buildStartDay(state : TeamUIState, newValue: Date): FieldWrapper<Date> {
-                val errorId : Int? = TeamUIValidator.validateStartDayChange(newValue)
+            fun buildStartDay(state : DeckUIState, newValue: Date): FieldWrapper<Date> {
+                val errorId : Int? = DeckUIValidator.validateStartDayChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
 
-            fun buildDuration(state : TeamUIState, newValue: Int): FieldWrapper<Int> {
-                val errorId : Int? = TeamUIValidator.validateDurationChange(newValue)
+            fun buildDuration(state : DeckUIState, newValue: Int): FieldWrapper<Int> {
+                val errorId : Int? = DeckUIValidator.validateDurationChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
 
-            fun buildLeader(state : TeamUIState, newValue: Card?): FieldWrapper<Card> {
-                val errorId : Int? = TeamUIValidator.validateLeaderChange(newValue)
+            fun buildLeader(state : DeckUIState, newValue: Card?): FieldWrapper<Card> {
+                val errorId : Int? = DeckUIValidator.validateLeaderChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
 
-            fun buildMembers(state : TeamUIState, newValue: List<Card>?): FieldWrapper<List<Card>> {
-                val errorId : Int? = TeamUIValidator.validateMembersChange(state, newValue)
+            fun buildMembers(state : DeckUIState, newValue: List<Card>?): FieldWrapper<List<Card>> {
+                val errorId : Int? = DeckUIValidator.validateMembersChange(state, newValue)
                 return FieldWrapper(newValue, errorId)
             }
         }
@@ -63,66 +65,71 @@ class DeckViewModel @Inject constructor(
 
     private val _nameState = MutableStateFlow(FieldWrapper<String>())
     private val _startDayState = MutableStateFlow(FieldWrapper<Date>())
-    private val _membersState = MutableStateFlow(FieldWrapper<List<Card>>())
+    private val _cardsState = MutableStateFlow(FieldWrapper<List<Card>>())
 
-    private val _teamId: MutableStateFlow<Long> = MutableStateFlow(0)
+    private val _deckId: MutableStateFlow<Long> = MutableStateFlow(0)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _initialTeamState: StateFlow<TeamState> = _teamId
+    private val _initialDeckState: StateFlow<DeckState> = _deckId
         .flatMapLatest { id -> repository.getDeckById(id) }
         .map { t ->
             if (t != null) {
                 _nameState.emit(FieldWrapper.buildName(uiState.value, t.deck.name))
                 _startDayState.emit(FieldWrapper.buildStartDay(uiState.value, t.deck.creationDate))
-                _membersState.emit(FieldWrapper.buildMembers(uiState.value, t.members))
-                TeamState.Success(team = t)
+                _cardsState.emit(FieldWrapper.buildMembers(uiState.value, t.cards))
+                DeckState.Success(deckBuilder = t)
             } else {
-                TeamState.Error
+                DeckState.Error
             }
         }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TeamState.Loading)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DeckState.Loading)
 
-    private val _updateLeaderId: MutableSharedFlow<Long> = MutableSharedFlow(0)
-    private val _addMemberId: MutableSharedFlow<Long> = MutableSharedFlow(0)
-    private val _delMemberId: MutableSharedFlow<Long> = MutableSharedFlow(0)
+    private fun canAddCard(cardToAdd: Card): Boolean {
+        val currentCards = _cardsState.value.current ?: return true
+        val countOfThisCard = currentCards.count { it.cid == cardToAdd.cid }
+        return countOfThisCard < 3
+    }
+
+    private val _addCardId: MutableSharedFlow<Long> = MutableSharedFlow(0)
+    private val _delCardId: MutableSharedFlow<Long> = MutableSharedFlow(0)
 
     init {
-        _addMemberId
-            .flatMapLatest { id -> repository.getPersonById(id) }
-            .map {
-                    p -> if (p != null) {
-                    var mm : MutableList<Card>? = _membersState.value.current?.toMutableList() ?: mutableListOf()
-                    mm?.add(p)
-                    _membersState.emit(FieldWrapper.buildMembers(uiState.value, mm))
+        _addCardId
+            .flatMapLatest { id -> repository.getCardById(id) }
+            .map { cardToAdd ->
+                if (cardToAdd != null && canAddCard(cardToAdd)) {
+                    val updatedCards = (_cardsState.value.current ?: mutableListOf()).toMutableList()
+                    updatedCards.add(cardToAdd)
+                    _cardsState.emit(FieldWrapper.buildMembers(uiState.value, updatedCards))
                 }
             }
             .launchIn(viewModelScope)
 
-        _delMemberId
+        _delCardId
             .map {
                 var mm: MutableList<Card> = mutableListOf()
-                _membersState.value.current?.forEach { m ->
-                    if (m.cid != it) mm.add(m)
+                _cardsState.value.current?.forEach { c ->
+                    if (c.cid != it) mm.add(c)
                 }
-                _membersState.emit(FieldWrapper.buildMembers(uiState.value, mm))
+                _cardsState.emit(FieldWrapper.buildMembers(uiState.value, mm))
             }
             .launchIn(viewModelScope)
     }
 
-    data class TeamUIState(
-        val initialState: TeamState,
+    data class DeckUIState(
+        val initialState: DeckState,
         val name: FieldWrapper<String>,
         val startDay: FieldWrapper<Date>,
-        val members: FieldWrapper<List<Card>>,
+        val card: FieldWrapper<List<Card>>,
     ) {
         private fun _isModified(): Boolean? {
-            if (initialState !is TeamState.Success) return null
-            if (name.current != initialState.team.deck.name) return true
-            if (name.current != initialState.team.deck.name) return true
-            if (startDay.current != initialState.team.deck.creationDate) return true
+            if (initialState !is DeckState.Success) return null
+            if (name.current != initialState.deckBuilder.deck.name) return true
+            if (name.current != initialState.deckBuilder.deck.name) return true
+            if (startDay.current != initialState.deckBuilder.deck.creationDate) return true
             if (!Comparators.shallowEqualsListCards(
-                    members.current,
-                    initialState.team.members
+                    card.current,
+                    initialState.deckBuilder.cards
                 )
             ) return true
             return false
@@ -131,7 +138,7 @@ class DeckViewModel @Inject constructor(
         private fun _hasError(): Boolean? {
             if (name.errorId != null) return true
             if (startDay.errorId != null) return true
-            if (members.errorId != null) return true
+            if (card.errorId != null) return true
             return false
         }
 
@@ -150,15 +157,15 @@ class DeckViewModel @Inject constructor(
         }
     }
 
-    val uiState : StateFlow<TeamUIState> = combine (
-        _initialTeamState,
+    val uiState : StateFlow<DeckUIState> = combine (
+        _initialDeckState,
         _nameState, _startDayState,
-        _membersState
-    ) { initial, n, s, mm -> TeamUIState(initial, n, s, mm) }.stateIn(
+        _cardsState
+    ) { initial, n, s, mm -> DeckUIState(initial, n, s, mm) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = TeamUIState(
-            TeamState.Loading,
+        initialValue = DeckUIState(
+            DeckState.Loading,
             FieldWrapper(),
             FieldWrapper(),
             FieldWrapper(),
@@ -167,49 +174,49 @@ class DeckViewModel @Inject constructor(
 
     sealed class UIEvent {
         data class NameChanged(val newValue: String): UIEvent()
-        data class StartDayChanged(val newValue: Date): UIEvent()
-        data class MemberAdded(val newValue: Long): UIEvent()
-        data class MemberDeleted(val newValue: Card): UIEvent()
+        data class DateChanged(val newValue: java.util.Date): UIEvent()
+        data class CardAdded(val newValue: Long): UIEvent()
+        data class CardDeleted(val newValue: Card): UIEvent()
     }
 
-    data class TeamUICallback(
+    data class DeckUICallback(
         val onEvent : (UIEvent) -> Unit,
     )
 
-    val uiCallback = TeamUICallback(
+    val uiCallback = DeckUICallback(
         onEvent = {
             viewModelScope.launch {
                 when (it) {
                     is UIEvent.NameChanged -> _nameState.emit(FieldWrapper.buildName(uiState.value, it.newValue))
-                    is UIEvent.StartDayChanged -> _startDayState.emit(FieldWrapper.buildStartDay(uiState.value, it.newValue))
-                    is UIEvent.MemberAdded -> _addMemberId.emit(it.newValue)
-                    is UIEvent.MemberDeleted -> _delMemberId.emit(it.newValue.cid)
+                    is UIEvent.DateChanged -> _startDayState.emit(FieldWrapper.buildStartDay(uiState.value, it.newValue))
+                    is UIEvent.CardAdded -> _addCardId.emit(it.newValue)
+                    is UIEvent.CardDeleted -> _delCardId.emit(it.newValue.cid)
                 }
             }
         }
     )
 
-    fun edit(pid: Long) = viewModelScope.launch {
-        _teamId.emit(pid)
+    fun edit(cid: Long) = viewModelScope.launch {
+        _deckId.emit(cid)
     }
 
-    fun create(deck: Deck) = viewModelScope.launch {
-        val pid: Long = repository.createDeck(deck)
-        _teamId.emit(pid)
+    fun create(deck: Deck) = viewModelScope.launch(Dispatchers.IO)  {
+        val cid: Long = repository.createDeck(deck)
+        _deckId.emit(cid)
     }
 
-    fun save() = viewModelScope.launch {
-        if (_initialTeamState.value !is TeamState.Success) return@launch
-        val oldTeam = _initialTeamState.value as TeamState.Success
+    fun save() = viewModelScope.launch(Dispatchers.IO) {
+        if (_initialDeckState.value !is DeckState.Success) return@launch
+        val oldDeck = _initialDeckState.value as DeckState.Success
         val deck = FullDeck (
             Deck (
-                did = _teamId.value,
+                did = _deckId.value,
                 name = _nameState.value.current!!,
                 creationDate = _startDayState.value.current!!
             ),
-            members = _membersState.value.current!!
+            cards = _cardsState.value.current!!
         )
-        repository.saveDeck(oldTeam.team, deck)
+        repository.saveDeck(oldDeck.deckBuilder, deck)
     }
 
 }

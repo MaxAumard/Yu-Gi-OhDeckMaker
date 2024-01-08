@@ -50,7 +50,7 @@ abstract class DeckBuilderDatabase : RoomDatabase() {
 
     }
 
-    suspend fun insertDataFromJson(context: Context) {
+    fun insertDataFromJson(context: Context) {
         try {
             val jsonString =
                 context.assets.open("ygo_data_cards.json").bufferedReader().use { it.readText() }

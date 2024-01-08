@@ -1,5 +1,6 @@
 package fr.uha.aumard.deckbuilder.ui.deck
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -19,31 +20,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.uha.aumard.android.ui.SwipeableItem
-import fr.uha.aumard.deckbuilder.R
 import fr.uha.aumard.deckbuilder.model.Card
+import fr.uha.aumard.deckbuilder.ui.card.ListCardsScreen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListMembersField(
-    value : List<Card>?,
-    modifier : Modifier = Modifier,
+fun ListCardsField(
+    value: List<Card>?,
+    modifier: Modifier = Modifier,
     @StringRes label: Int? = null,
-    onAdd: (pid : Long) -> Unit,
-    onDelete: (card : Card) -> Unit,
-    errorId : Int?,
+    onAdd: (Card) -> Unit,
+    onDelete: (Card) -> Unit,
+    errorId: Int?,
 ) {
-    val showDialog = remember { mutableStateOf(false) }
+    val showPicker = remember { mutableStateOf(false) }
 
-    if (showDialog.value) {
-        PersonPicker(
-            title = R.string.member_select,
-            onSelect = { showDialog.value = false; if (it != null) onAdd(it.cid) }
+    if (showPicker.value) {
+        ListCardsScreen(
+            isPickerMode = true,
+            onCardPicked = { selectedCard ->
+                showPicker.value = false
+                onAdd(selectedCard)
+                //afficher dans le logcat la carte ajoutée
+                Log.d("TEST","Card added : $selectedCard")
+            }
         )
     }
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { showDialog.value = true }) {
+            FloatingActionButton(onClick = { showPicker.value = true }) {
                 Icon(Icons.Filled.Add, contentDescription = "add")
             }
         }
@@ -78,7 +83,7 @@ fun ListMembersField(
                         SwipeableItem(
                             onDelete = { onDelete(item) }
                         ) {
-                            TeamCardItem(item)
+                            DeckCardItem(item)
                         }
                     }
                 }

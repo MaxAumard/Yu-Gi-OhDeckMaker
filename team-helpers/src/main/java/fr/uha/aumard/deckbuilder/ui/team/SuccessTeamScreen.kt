@@ -26,13 +26,6 @@ fun SuccessTeamScreen(
             supportingText = { if (team.name.errorId != null) Text(stringResource(id = team.name.errorId)) },
             isError = team.name.errorId != null,
         )
-        OutlinedDateField(
-            value = team.startDay.current,
-            onValueChange = { uiCB.onEvent(TeamViewModel.UIEvent.StartDayChanged(it)) },
-            modifier = Modifier.fillMaxWidth(),
-            label = R.string.start_day,
-            errorId = team.startDay.errorId
-        )
         OutlinedIntField(
             value = team.duration.current,
             onValueChange = { uiCB.onEvent(TeamViewModel.UIEvent.DurationChanged(it)) },

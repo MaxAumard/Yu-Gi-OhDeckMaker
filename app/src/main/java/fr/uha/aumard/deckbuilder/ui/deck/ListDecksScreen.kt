@@ -31,12 +31,12 @@ import fr.uha.aumard.deckbuilder.model.Deck
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListTeamsScreen(
-    vm : ListTeamsViewModel = hiltViewModel(),
+fun ListDecksScreen(
+    vm : ListDecksViewModel = hiltViewModel(),
     onCreate : () -> Unit,
     onEdit : (p : Deck) -> Unit,
 ) {
-    val teams = vm.teams.collectAsStateWithLifecycle(initialValue = emptyList())
+    val teams = vm.decks.collectAsStateWithLifecycle(initialValue = emptyList())
 
     val menuEntries = listOf(
         AppMenuEntry.OverflowEntry(title = R.string.populate, listener = {vm.feed() } ),
@@ -47,7 +47,7 @@ fun ListTeamsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    AppTitle(pageTitleId = R.string.team_list,)
+                    AppTitle(pageTitleId = R.string.deck_list,)
                 },
                 actions = { AppMenu(entries = menuEntries) }
             )

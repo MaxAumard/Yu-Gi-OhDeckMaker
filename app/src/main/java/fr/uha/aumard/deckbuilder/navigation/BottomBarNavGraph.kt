@@ -44,7 +44,7 @@ sealed class BottomBarNavGraphEntry(
     val iconFocused: ImageVector
 ) {
 
-    // for persons
+    // for cards
     object Cards: BottomBarNavGraphEntry(
         route = "tl_persons",
         title = R.string.action_cards,
@@ -52,7 +52,7 @@ sealed class BottomBarNavGraphEntry(
         iconFocused = Icons.Filled.Person
     )
 
-    // for teams
+    // for decks
     object Teams: BottomBarNavGraphEntry(
         route = "tl_teams",
         title = R.string.action_decks,

@@ -14,12 +14,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.uha.aumard.android.ui.*
 import fr.uha.aumard.deckbuilder.R
-import fr.uha.aumard.deckbuilder.model.Deck
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateTeamScreen(
+fun EditDeckScreen(
     vm: DeckViewModel = hiltViewModel(),
+    tid: Long,
     back: () -> Unit,
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
@@ -27,7 +27,7 @@ fun CreateTeamScreen(
 
     LaunchedEffect(vm.isLaunched) {
         if(!vm.isLaunched) {
-            vm.create(Deck())
+            vm.edit(tid)
             vm.isLaunched = true
         }
     }
@@ -43,24 +43,25 @@ fun CreateTeamScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { AppTitle (pageTitleId = R.string.title_team_create, isModified = uiState.isModified()) },
+                title = { AppTitle (pageTitleId = R.string.title_deck_edit, isModified = uiState.isModified()) },
                 actions = { AppMenu(menuEntries) }
             )
         }
-    ) { innerPadding -> Column(
+    ) { innerPadding ->
+        Column(
             modifier = Modifier.padding(innerPadding)
         ) {
             when (uiState.initialState) {
-                DeckViewModel.TeamState.Loading -> {
+                DeckViewModel.DeckState.Loading -> {
                     LoadingScreen(text = stringResource(R.string.loading))
                 }
 
-                DeckViewModel.TeamState.Error -> {
+                DeckViewModel.DeckState.Error -> {
                     ErrorScreen(text = stringResource(R.string.error))
                 }
 
-                is DeckViewModel.TeamState.Success -> {
-                    SuccessTeamScreen(uiState, vm.uiCallback)
+                is DeckViewModel.DeckState.Success -> {
+                    SuccessDeckScreen(uiState, vm.uiCallback)
                 }
             }
         }

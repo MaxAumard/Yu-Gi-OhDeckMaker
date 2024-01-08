@@ -23,20 +23,20 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class PersonPickerViewModel @Inject constructor(private val dao: CardDao) : ViewModel() {
+class CardPickerViewModel @Inject constructor(private val dao: CardDao) : ViewModel() {
 
-    val persons: Flow<List<Card>> = dao.getAll()
+    val cards: Flow<List<Card>> = dao.getAll()
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PersonPicker (
-    vm: PersonPickerViewModel = hiltViewModel(),
+fun CardPicker (
+    vm: CardPickerViewModel = hiltViewModel(),
     @StringRes title : Int?,
     onSelect: (card : Card?) -> Unit,
 ) {
-    val list = vm.persons.collectAsStateWithLifecycle(initialValue = emptyList())
+    val list = vm.cards.collectAsStateWithLifecycle(initialValue = emptyList())
     Dialog(onDismissRequest = { onSelect(null) }) {
         Scaffold(
             topBar = {
