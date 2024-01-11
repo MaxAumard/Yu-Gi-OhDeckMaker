@@ -9,7 +9,6 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import fr.uha.aumard.deckbuilder.R
 import fr.uha.aumard.deckbuilder.model.Card
-import fr.uha.aumard.deckbuilder.ui.card.CreateCardScreen
 import fr.uha.aumard.deckbuilder.ui.card.ListCardsScreen
 
 private sealed class CardNavGraphEntry(
@@ -51,16 +50,13 @@ fun NavGraphBuilder.personsNavGraph(
                 onCardClick = { c: Card -> navController.navigate(CardNavGraphEntry.Show.to(c.cid)) }
             )
         }
-        composable(route = CardNavGraphEntry.Create.route) {
-            CreateCardScreen(back = { navController.popBackStack() })
-        }
         composable(
             route = CardNavGraphEntry.Show.route,
             arguments = listOf(navArgument("cid") { type = NavType.LongType })
         ) { backStackEntry ->
             CardInfoScreen(
-                cid = backStackEntry.arguments?.getLong("cid")!!,
-                back = { navController.popBackStack() })
+                cid = backStackEntry.arguments?.getLong("cid")!!
+            )
         }
     }
 }

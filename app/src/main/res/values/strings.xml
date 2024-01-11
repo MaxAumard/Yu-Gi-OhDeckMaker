@@ -16,7 +16,7 @@
     <string name="populate">Populate</string>
     <string name="clean">clean</string>
     <string name="picture">Picture</string>
-    <string name="deck_list">deck list</string>
+    <string name="deck_list">List of Decks</string>
     <string name="title_deck_create">Create Deck</string>
     <string name="title_deck_edit">Edit Deck</string>
     <string name="deckname">Name</string>

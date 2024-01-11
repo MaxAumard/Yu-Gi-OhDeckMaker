@@ -53,7 +53,7 @@ sealed class BottomBarNavGraphEntry(
     )
 
     // for decks
-    object Teams: BottomBarNavGraphEntry(
+    object Decks : BottomBarNavGraphEntry(
         route = "tl_teams",
         title = R.string.action_decks,
         icon = Icons.Outlined.Group,
@@ -73,7 +73,7 @@ fun BottomNavGraph (
         modifier = modifier
      ) {
         personsNavGraph(navController = navController)
-        teamsNavGraph(navController = navController)
+        decksNavGraph(navController = navController)
     }
 }
 
@@ -82,7 +82,7 @@ fun BottomBar(navController: NavHostController) {
 
     val screens = listOf(
         BottomBarNavGraphEntry.Cards,
-        BottomBarNavGraphEntry.Teams
+        BottomBarNavGraphEntry.Decks
     )
 
     val navStackBackEntry by navController.currentBackStackEntryAsState()

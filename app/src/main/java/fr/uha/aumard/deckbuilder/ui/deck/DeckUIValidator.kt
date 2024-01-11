@@ -39,26 +39,25 @@ object DeckUIValidator {
         return null
     }
 
-    fun validateDurationChange(newValue: Int) : Int? {
+    fun validateDurationChange(newValue: Int): Int? {
         return when {
-            newValue < 2 ->  R.string.duration_too_short
-            newValue > 9 ->  R.string.duration_too_long
+            newValue < 2 -> R.string.duration_too_short
+            newValue > 9 -> R.string.duration_too_long
             else -> null
         }
     }
 
-    fun validateLeaderChange(newValue: Card?) : Int? {
-        if (newValue == null) return R.string.leader_must_known
-        return null
-    }
 
-    fun validateMembersChange(state: DeckViewModel.DeckUIState, newValue: List<Card>?): Int? {
-        if (newValue == null) return R.string.members_not_empty
-        val size = newValue.size
+    fun validateCardsChange(state: DeckViewModel.DeckUIState, newValue: List<Card>?): Int? {
+        if (newValue == null) return R.string.decks_not_empty
+
+        val mainDeckCards = newValue.filter { !it.isExtraDeck }
+        val extraDeckCards = newValue.filter { it.isExtraDeck }
+
         return when {
-            size == 0 -> R.string.members_not_empty
-            size < 3 -> R.string.members_not_enough
-            size > 6 -> R.string.members_too_much
+            mainDeckCards.size < 40 -> R.string.decks_not_enough
+            mainDeckCards.size > 60 -> R.string.decks_too_much
+            extraDeckCards.size > 15 -> R.string.extra_decks_too_much
             else -> null
         }
     }

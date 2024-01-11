@@ -9,7 +9,10 @@ import fr.uha.aumard.deckbuilder.model.Comparators
 import fr.uha.aumard.deckbuilder.model.Deck
 import fr.uha.aumard.deckbuilder.model.DeckCardAssociation
 import fr.uha.aumard.deckbuilder.model.FullDeck
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
+
 
 class DeckRepository(
     private val deckDao: DeckDao,
@@ -64,9 +67,22 @@ class DeckRepository(
         return DeckId
     }
 
-    suspend fun delete(deck: Deck) {
-        deckDao.delete(deck)
-        deckDao.deleteDeckCards(deck.did)
+    @WorkerThread
+    suspend fun deleteDeckById(deckId: Long) {
+        withContext(Dispatchers.IO) {
+            val deck = deckDao.getDeckByIdSimple(deckId)
+            if (deck != null) {
+
+                deckDao.delete(deck)
+                deckDao.deleteDeckCards(deck.did)
+            }
+        }
+    }
+
+    @WorkerThread
+    fun getFirstCard(deckId: Long): Card? {
+        return deckDao.getFirstCardOfDeck(deckId)
     }
 
 }
+

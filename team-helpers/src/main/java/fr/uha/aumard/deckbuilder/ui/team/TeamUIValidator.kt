@@ -51,12 +51,12 @@ object TeamUIValidator {
     }
 
     fun validateMembersChange(state : TeamViewModel.TeamUIState, newValue: List<Person>?) : Int? {
-        if (newValue == null) return R.string.members_not_empty
+        if (newValue == null) return R.string.decks_not_empty
         val size = newValue.size
         return when {
-            size == 0 -> R.string.members_not_empty
-            size < 3 ->  R.string.members_not_enough
-            size > 6 ->  R.string.members_too_much
+            size == 0 -> R.string.decks_not_empty
+            size < 3 ->  R.string.decks_not_enough
+            size > 6 ->  R.string.decks_too_much
             else -> null
         }
     }

@@ -11,7 +11,8 @@
     <string name="duration_too_short">Duration too short</string>
     <string name="duration_too_long">Duration too long</string>
     <string name="leader_must_known">Leader must be known</string>
-    <string name="members_not_empty">Members cannot be empty</string>
-    <string name="members_not_enough">Members underloaded</string>
-    <string name="members_too_much">Members overloaded</string>
+    <string name="decks_not_empty">Decks cannot be empty</string>
+    <string name="decks_not_enough">Decks underloaded</string>
+    <string name="decks_too_much">Decks overloaded</string>
+    <string name="extra_decks_too_much">Extra-Deck overloaded</string>
 </resources>

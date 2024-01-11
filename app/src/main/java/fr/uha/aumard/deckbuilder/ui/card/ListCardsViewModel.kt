@@ -3,15 +3,12 @@ package fr.uha.aumard.deckbuilder.ui.card
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import fr.uha.aumard.deckbuilder.database.FeedDatabase
 import fr.uha.aumard.deckbuilder.model.Card
 import fr.uha.aumard.deckbuilder.repository.CardRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,23 +47,8 @@ class ListCardsViewModel @Inject constructor(
             }
         }
     }
-    fun feed() = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            FeedDatabase().populate()
-        }
-    }
 
-    fun clean() = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            FeedDatabase().clear()
-        }
-    }
 
-    fun delete(card: Card) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            repository.delete(card)
-        }
-    }
 
     fun updateSearchQuery(query: String) {
         currentSearchQuery.value = query

@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import fr.uha.aumard.deckbuilder.model.Card
 import fr.uha.aumard.deckbuilder.model.CardWithDetails
-import fr.uha.aumard.deckbuilder.ui.card.ListCardsViewModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -53,4 +52,11 @@ interface CardDao {
         offset: Int,
         searchQuery: String,
     ): Flow<List<Card>>
+
+    @Query("SELECT * FROM cards WHERE isExtraDeck = 0 ORDER BY RANDOM() LIMIT 40")
+    suspend fun getRandomMainDeckCards(): List<Card>
+
+    @Query("SELECT * FROM cards WHERE isExtraDeck = 1 ORDER BY RANDOM() LIMIT 15")
+    suspend fun getRandomExtraDeckCards(): List<Card>
+
 }

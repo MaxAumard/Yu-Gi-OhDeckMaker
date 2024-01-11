@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.uha.aumard.android.ui.*
 import fr.uha.aumard.deckbuilder.R
 import fr.uha.aumard.deckbuilder.model.Deck
+import fr.uha.aumard.deckbuilder.ui.collection.SuccessDeckScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,16 +24,20 @@ fun CreateDeckScreen(
     back: () -> Unit,
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    val epoxy =  remember { mutableStateOf(false) }
 
     LaunchedEffect(vm.isLaunched) {
-        if(!vm.isLaunched) {
+        if (!vm.isLaunched) {
             vm.create(Deck())
             vm.isLaunched = true
         }
     }
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.deleteUnsavedDeck()
+        }
+    }
 
-    val menuEntries = listOf (
+    val menuEntries = listOf(
         AppMenuEntry.ActionEntry(
             title = R.string.save,
             icon = Icons.Filled.Save,

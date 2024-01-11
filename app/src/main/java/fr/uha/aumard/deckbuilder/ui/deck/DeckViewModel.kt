@@ -36,28 +36,19 @@ class DeckViewModel @Inject constructor(
         val errorId: Int? = null
     ) {
         companion object {
-            fun buildName(state : DeckUIState, newValue: String): FieldWrapper<String> {
-                val errorId : Int? = DeckUIValidator.validateNameChange(newValue)
+            fun buildName(newValue: String): FieldWrapper<String> {
+                val errorId: Int? = DeckUIValidator.validateNameChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
 
-            fun buildStartDay(state : DeckUIState, newValue: Date): FieldWrapper<Date> {
-                val errorId : Int? = DeckUIValidator.validateStartDayChange(newValue)
+            fun buildStartDate(newValue: Date): FieldWrapper<Date> {
+                val errorId: Int? = DeckUIValidator.validateStartDayChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
 
-            fun buildDuration(state : DeckUIState, newValue: Int): FieldWrapper<Int> {
-                val errorId : Int? = DeckUIValidator.validateDurationChange(newValue)
-                return FieldWrapper(newValue, errorId)
-            }
 
-            fun buildLeader(state : DeckUIState, newValue: Card?): FieldWrapper<Card> {
-                val errorId : Int? = DeckUIValidator.validateLeaderChange(newValue)
-                return FieldWrapper(newValue, errorId)
-            }
-
-            fun buildMembers(state : DeckUIState, newValue: List<Card>?): FieldWrapper<List<Card>> {
-                val errorId : Int? = DeckUIValidator.validateMembersChange(state, newValue)
+            fun buildCards(state: DeckUIState, newValue: List<Card>?): FieldWrapper<List<Card>> {
+                val errorId: Int? = DeckUIValidator.validateCardsChange(state, newValue)
                 return FieldWrapper(newValue, errorId)
             }
         }
@@ -74,9 +65,9 @@ class DeckViewModel @Inject constructor(
         .flatMapLatest { id -> repository.getDeckById(id) }
         .map { t ->
             if (t != null) {
-                _nameState.emit(FieldWrapper.buildName(uiState.value, t.deck.name))
-                _startDayState.emit(FieldWrapper.buildStartDay(uiState.value, t.deck.creationDate))
-                _cardsState.emit(FieldWrapper.buildMembers(uiState.value, t.cards))
+                _nameState.emit(FieldWrapper.buildName(t.deck.name))
+                _startDayState.emit(FieldWrapper.buildStartDate(t.deck.creationDate))
+                _cardsState.emit(FieldWrapper.buildCards(uiState.value, t.cards))
                 DeckState.Success(deckBuilder = t)
             } else {
                 DeckState.Error
@@ -100,7 +91,7 @@ class DeckViewModel @Inject constructor(
                 if (cardToAdd != null && canAddCard(cardToAdd)) {
                     val updatedCards = (_cardsState.value.current ?: mutableListOf()).toMutableList()
                     updatedCards.add(cardToAdd)
-                    _cardsState.emit(FieldWrapper.buildMembers(uiState.value, updatedCards))
+                    _cardsState.emit(FieldWrapper.buildCards(uiState.value, updatedCards))
                 }
             }
             .launchIn(viewModelScope)
@@ -111,7 +102,7 @@ class DeckViewModel @Inject constructor(
                 _cardsState.value.current?.forEach { c ->
                     if (c.cid != it) mm.add(c)
                 }
-                _cardsState.emit(FieldWrapper.buildMembers(uiState.value, mm))
+                _cardsState.emit(FieldWrapper.buildCards(uiState.value, mm))
             }
             .launchIn(viewModelScope)
     }
@@ -187,8 +178,8 @@ class DeckViewModel @Inject constructor(
         onEvent = {
             viewModelScope.launch {
                 when (it) {
-                    is UIEvent.NameChanged -> _nameState.emit(FieldWrapper.buildName(uiState.value, it.newValue))
-                    is UIEvent.DateChanged -> _startDayState.emit(FieldWrapper.buildStartDay(uiState.value, it.newValue))
+                    is UIEvent.NameChanged -> _nameState.emit(FieldWrapper.buildName(it.newValue))
+                    is UIEvent.DateChanged -> _startDayState.emit(FieldWrapper.buildStartDate(it.newValue))
                     is UIEvent.CardAdded -> _addCardId.emit(it.newValue)
                     is UIEvent.CardDeleted -> _delCardId.emit(it.newValue.cid)
                 }
@@ -209,14 +200,28 @@ class DeckViewModel @Inject constructor(
         if (_initialDeckState.value !is DeckState.Success) return@launch
         val oldDeck = _initialDeckState.value as DeckState.Success
         val deck = FullDeck (
-            Deck (
+            Deck(
                 did = _deckId.value,
                 name = _nameState.value.current!!,
                 creationDate = _startDayState.value.current!!
             ),
             cards = _cardsState.value.current!!
         )
+        isDeckSaved = true
         repository.saveDeck(oldDeck.deckBuilder, deck)
     }
 
+    var isDeckSaved = false
+
+    fun deleteUnsavedDeck() {
+        if (!isDeckSaved && _deckId.value != 0L) {
+            delete(_deckId.value)
+        }
+    }
+
+    fun delete(did: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteDeckById(did)
+        }
+    }
 }

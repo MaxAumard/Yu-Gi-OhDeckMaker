@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import fr.uha.aumard.deckbuilder.model.Card
 import fr.uha.aumard.deckbuilder.model.Deck
 import fr.uha.aumard.deckbuilder.model.DeckCardAssociation
 import fr.uha.aumard.deckbuilder.model.FullDeck
@@ -45,6 +46,13 @@ interface DeckDao {
     @Delete
     suspend fun removeDeckCard(members: List<DeckCardAssociation>)
 
+    @Query("SELECT * FROM decks WHERE did = :id")
+    suspend fun getDeckByIdSimple(id: Long): Deck?
+
     @Query("DELETE FROM tpas WHERE did = :tid")
     fun deleteDeckCards(tid: Long)
+
+    @Query("SELECT * FROM cards WHERE cid IN (SELECT cid FROM tpas WHERE did = :deckId) LIMIT 1")
+    fun getFirstCardOfDeck(deckId: Long): Card?
+
 }
