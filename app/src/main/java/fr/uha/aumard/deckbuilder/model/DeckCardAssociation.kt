@@ -3,7 +3,7 @@ package fr.uha.aumard.deckbuilder.model
 import androidx.room.Entity
 import androidx.room.Index
 
-@Entity(tableName = "tpas",
+@Entity(tableName = "deck_card_associations",
         primaryKeys = ["did", "cid"],
         indices = [Index("did"), Index("cid")]
 )

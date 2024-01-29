@@ -41,18 +41,18 @@ interface DeckDao {
     suspend fun removeDeckCard(member: DeckCardAssociation)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addDeckCard(members: List<DeckCardAssociation>)
+    suspend fun addDeckCard(cards: List<DeckCardAssociation>)
 
     @Delete
-    suspend fun removeDeckCard(members: List<DeckCardAssociation>)
+    suspend fun removeDeckCard(cards: List<DeckCardAssociation>)
 
     @Query("SELECT * FROM decks WHERE did = :id")
     suspend fun getDeckByIdSimple(id: Long): Deck?
 
-    @Query("DELETE FROM tpas WHERE did = :tid")
+    @Query("DELETE FROM deck_card_associations WHERE did = :tid")
     fun deleteDeckCards(tid: Long)
 
-    @Query("SELECT * FROM cards WHERE cid IN (SELECT cid FROM tpas WHERE did = :deckId) LIMIT 1")
+    @Query("SELECT * FROM cards WHERE cid IN (SELECT cid FROM deck_card_associations WHERE did = :deckId) LIMIT 1")
     fun getFirstCardOfDeck(deckId: Long): Card?
 
 }

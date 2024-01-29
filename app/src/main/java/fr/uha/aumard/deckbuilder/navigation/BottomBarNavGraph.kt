@@ -1,33 +1,22 @@
 package fr.uha.aumard.deckbuilder.navigation
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Group
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Group
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -39,27 +28,29 @@ import fr.uha.aumard.deckbuilder.R
 
 sealed class BottomBarNavGraphEntry(
     val route: String,
-    val title: Int,
-    val icon: ImageVector,
-    val iconFocused: ImageVector
+    val icon: Int,
+    val iconFocused: Int
 ) {
 
     // for cards
     object Cards: BottomBarNavGraphEntry(
-        route = "tl_persons",
-        title = R.string.action_cards,
-        icon = Icons.Outlined.Person,
-        iconFocused = Icons.Filled.Person
+        route = "tl_cards",
+        icon = R.drawable.ic_outlined_card,
+        iconFocused = R.drawable.ic_filled_card
     )
 
     // for decks
     object Decks : BottomBarNavGraphEntry(
-        route = "tl_teams",
-        title = R.string.action_decks,
-        icon = Icons.Outlined.Group,
-        iconFocused = Icons.Filled.Group
+        route = "tl_decks",
+        icon = R.drawable.ic_outlined_deck,
+        iconFocused = R.drawable.ic_filled_deck
     )
 
+    object Collection : BottomBarNavGraphEntry(
+        route = "tl_collection",
+        icon = R.drawable.ic_outlined_collection,
+        iconFocused = R.drawable.ic_filled_collection
+    )
 }
 
 @Composable
@@ -72,8 +63,9 @@ fun BottomNavGraph (
         startDestination = BottomBarNavGraphEntry.Cards.route,
         modifier = modifier
      ) {
-        personsNavGraph(navController = navController)
+        cardsNavGraph(navController = navController)
         decksNavGraph(navController = navController)
+        collectionNavGraph(navController = navController)
     }
 }
 
@@ -82,7 +74,8 @@ fun BottomBar(navController: NavHostController) {
 
     val screens = listOf(
         BottomBarNavGraphEntry.Cards,
-        BottomBarNavGraphEntry.Decks
+        BottomBarNavGraphEntry.Decks,
+        BottomBarNavGraphEntry.Collection
     )
 
     val navStackBackEntry by navController.currentBackStackEntryAsState()
@@ -108,24 +101,20 @@ fun BottomBar(navController: NavHostController) {
 }
 
 @Composable
-private fun RowScope.AddItem(
+private fun AddItem(
     screen: BottomBarNavGraphEntry,
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
-    val background =
-        if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else Color.Transparent
 
-    val contentColor =
-        if (selected) Color.White else Color.White
+    val iconPainter = painterResource(id = if (selected) screen.iconFocused else screen.icon)
 
     Box(
         modifier = Modifier
             .height(40.dp)
             .clip(CircleShape)
-            .background(background)
             .clickable(onClick = {
                 navController.navigate(screen.route) {
                     popUpTo(navController.graph.findStartDestination().id)
@@ -140,16 +129,9 @@ private fun RowScope.AddItem(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
-                painter = rememberVectorPainter(image = if (selected) screen.iconFocused else screen.icon),
+                painter = iconPainter,
                 contentDescription = "icon",
-                tint = contentColor
             )
-            AnimatedVisibility(visible = selected) {
-                Text(
-                    text = stringResource(id = screen.title),
-                    color = contentColor
-                )
-            }
         }
     }
 }

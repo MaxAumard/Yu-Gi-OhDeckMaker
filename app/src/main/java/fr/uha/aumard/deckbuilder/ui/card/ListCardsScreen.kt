@@ -42,7 +42,6 @@ import fr.uha.aumard.deckbuilder.model.Type
 @Composable
 fun ListCardsScreen(
     vm: ListCardsViewModel = hiltViewModel(),
-    onCreate: () -> Unit = {},
     onCardClick: (Card) -> Unit = {},
     isPickerMode: Boolean = false,
     onCardPicked: (Card) -> Unit = {}
@@ -75,11 +74,6 @@ fun ListCardsScreen(
                 }
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onCreate) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = null)
-            }
-        }
     ) { innerPadding ->
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(3),

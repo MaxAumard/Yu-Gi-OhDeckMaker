@@ -29,7 +29,6 @@ import fr.uha.aumard.deckbuilder.ui.card.ListCardsScreen
 fun ListCardsField(
     value: List<Card>?,
     modifier: Modifier = Modifier,
-    @StringRes label: Int? = null,
     onAdd: (Card) -> Unit,
     onDelete: (Card) -> Unit,
     errorId: Int?,
@@ -40,7 +39,6 @@ fun ListCardsField(
 
     if (showPicker.value) {
         ListCardsScreen(
-
             isPickerMode = true,
             onCardPicked = { selectedCard ->
                 val count = value?.count { it.cid == selectedCard.cid } ?: 0

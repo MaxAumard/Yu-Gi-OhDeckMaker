@@ -22,7 +22,6 @@ private sealed class CardNavGraphEntry(
         title = R.string.action_cards,
     )
 
-    // to create a person
     object Create : CardNavGraphEntry(
         route = "card",
         title = R.string.action_card_create,
@@ -40,13 +39,12 @@ private sealed class CardNavGraphEntry(
 
 }
 
-fun NavGraphBuilder.personsNavGraph(
+fun NavGraphBuilder.cardsNavGraph(
     navController: NavHostController
 ) {
     navigation(CardNavGraphEntry.Cards.route, BottomBarNavGraphEntry.Cards.route) {
         composable(route = CardNavGraphEntry.Cards.route) {
             ListCardsScreen(
-                onCreate = { navController.navigate(CardNavGraphEntry.Create.route) },
                 onCardClick = { c: Card -> navController.navigate(CardNavGraphEntry.Show.to(c.cid)) }
             )
         }

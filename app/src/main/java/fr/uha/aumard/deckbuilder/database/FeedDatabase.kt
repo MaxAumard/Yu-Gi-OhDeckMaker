@@ -8,11 +8,12 @@ class FeedDatabase {
     private val deckDao: DeckDao = DeckBuilderDatabase.get().deckDao
 
     suspend fun feedDecks() {
-        repeat(5) {
-            val deckId = deckDao.create(Deck())
+        repeat(3) {
+            val deckId = deckDao.create(Deck(name=deckNames.random()))
 
             val mainDeckCards = cardDao.getRandomMainDeckCards()
             val extraDeckCards = cardDao.getRandomExtraDeckCards()
+
 
             val allCards = mainDeckCards + extraDeckCards
 

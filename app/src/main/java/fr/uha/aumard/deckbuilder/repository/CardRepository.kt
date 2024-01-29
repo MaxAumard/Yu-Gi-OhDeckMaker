@@ -20,7 +20,7 @@ class CardRepository(private val cardDao: CardDao) {
         return@withContext cardDao.create(card)
     }
 
-    suspend fun update(oldCard: Card, card: Card): Long = withContext(Dispatchers.IO) {
+    suspend fun update(card: Card): Long = withContext(Dispatchers.IO) {
         return@withContext cardDao.update(card)
     }
 

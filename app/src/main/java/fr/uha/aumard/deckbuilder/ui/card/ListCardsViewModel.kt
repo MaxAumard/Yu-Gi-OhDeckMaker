@@ -16,7 +16,7 @@ class ListCardsViewModel @Inject constructor(
     private val repository: CardRepository
 ) : ViewModel() {
     private var currentPage = 0
-    private val pageSize = 21 // Adjust the page size as needed
+    private val pageSize = 21
     private var isLoading = false
 
     // Filter and search properties

@@ -123,7 +123,8 @@ fun LevelStars(level: String?) {
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = stringResource(R.string.card_level_star),
-                tint = Color.Yellow
+                tint = Color.Yellow,
+                modifier = Modifier.size(20.dp)
             )
         }
     }

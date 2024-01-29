@@ -14,7 +14,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.uha.aumard.android.ui.*
 import fr.uha.aumard.deckbuilder.R
-import fr.uha.aumard.deckbuilder.ui.deck.SuccessDeckScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,6 +63,7 @@ fun EditDeckScreen(
                 is DeckViewModel.DeckState.Success -> {
                     SuccessDeckScreen(uiState, vm.uiCallback)
                 }
+
             }
         }
     }

@@ -10,7 +10,7 @@ import fr.uha.aumard.deckbuilder.R
 import fr.uha.aumard.deckbuilder.model.Deck
 import fr.uha.aumard.deckbuilder.ui.deck.CreateDeckScreen
 import fr.uha.aumard.deckbuilder.ui.deck.EditDeckScreen
-import fr.uha.aumard.deckbuilder.ui.collection.ListCollectionScreen
+import fr.uha.aumard.deckbuilder.ui.deck.ListDecksScreen
 
 private sealed class DeckNavGraphEntry(
     val route: String,
@@ -43,7 +43,7 @@ fun NavGraphBuilder.decksNavGraph(
 ) {
     navigation(DeckNavGraphEntry.Decks.route, BottomBarNavGraphEntry.Decks.route) {
         composable(route = DeckNavGraphEntry.Decks.route) {
-            ListCollectionScreen(
+            ListDecksScreen(
                 onCreate = { navController.navigate(DeckNavGraphEntry.Create.route) },
                 onEdit = { t: Deck -> navController.navigate(DeckNavGraphEntry.Edit.to(t.did)) }
             )

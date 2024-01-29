@@ -12,15 +12,23 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import fr.uha.aumard.android.database.DatabaseTypeConverters
 import fr.uha.aumard.deckbuilder.model.Card
+import fr.uha.aumard.deckbuilder.model.CollectionCard
+import fr.uha.aumard.deckbuilder.model.CollectionCardAssociation
 import fr.uha.aumard.deckbuilder.model.Deck
 import fr.uha.aumard.deckbuilder.model.DeckCardAssociation
+import fr.uha.aumard.deckbuilder.model.Extension
+import fr.uha.aumard.deckbuilder.model.ExtensionCardAssociation
 import fr.uha.aumard.deckbuilder.model.Type
 
 @Database(
     entities = [
         Card::class,
         Deck::class,
-        DeckCardAssociation::class
+        DeckCardAssociation::class,
+        CollectionCard::class,
+        CollectionCardAssociation::class,
+        Extension::class,
+        ExtensionCardAssociation::class
     ],
     version = 1,
     exportSchema = false
@@ -29,8 +37,9 @@ import fr.uha.aumard.deckbuilder.model.Type
 abstract class DeckBuilderDatabase : RoomDatabase() {
 
     abstract val cardDao: CardDao
-
     abstract val deckDao: DeckDao
+    abstract val collectionCardDao: CollectionCardDao
+    abstract val extensionDao: ExtensionDao
 
     companion object {
         private lateinit var instance: DeckBuilderDatabase
@@ -50,13 +59,17 @@ abstract class DeckBuilderDatabase : RoomDatabase() {
 
     }
 
-    fun insertDataFromJson(context: Context) {
+    suspend fun insertDataFromJson(context: Context) {
         try {
             val jsonString =
                 context.assets.open("ygo_data_cards.json").bufferedReader().use { it.readText() }
             val gson = Gson()
             val jsonArray = gson.fromJson(jsonString, JsonArray::class.java)
             val cards = mutableListOf<Card>()
+            val extensions = mutableSetOf<Extension>()
+            val extensionCardAssociations = mutableListOf<ExtensionCardAssociation>()
+
+            var cid: Long = 0
             for (jsonElement in jsonArray) {
                 if (jsonElement is JsonObject) {
                     val name = jsonElement.get("name")?.takeIf { !it.isJsonNull }?.asString ?: ""
@@ -79,6 +92,7 @@ abstract class DeckBuilderDatabase : RoomDatabase() {
                     }
 
                     val newCard = Card(
+                        cid = cid,
                         name = name,
                         description = description,
                         level = level,
@@ -89,9 +103,41 @@ abstract class DeckBuilderDatabase : RoomDatabase() {
                         defense = defense
                     )
                     cards.add(newCard)
+
+
+                    val setsArray = jsonElement.getAsJsonArray("sets")
+                    setsArray?.forEach { setElement ->
+                        if (setElement is JsonObject) {
+                            val setName = setElement.get("set_name").asString
+                            if (
+                                "tournament" !in setName.lowercase()
+                                && "DEM" !in setElement.get("set_code").asString
+                                && "tin" !in setName.lowercase()
+                                && "structure" !in setName.lowercase()
+                                && "starter" !in setName.lowercase()
+                                && "legendary" !in setName.lowercase()
+                                && "participation" !in setName.lowercase()
+                                && "duel" !in setName.lowercase()
+                                && "jump" !in setName.lowercase()
+                                && "promo" !in setName.lowercase()
+                                ) {
+                                val newExtension = Extension(setName = setName)
+                                extensions.add(newExtension)
+
+                                val newAssociation =
+                                    ExtensionCardAssociation(setName = setName, cid = cid)
+                                extensionCardAssociations.add(newAssociation)
+                            }
+                        }
+                    }
+                    cid++;
                 }
             }
             cardDao.insertAll(cards)
+            extensionDao.insertAll(extensions.toList())
+            extensionDao.addExtensionCard(extensionCardAssociations)
+            Log.d("DeckBuilderDatabase", "extensionCardAssociations: $extensionCardAssociations")
+
         } catch (e: Exception) {
             Log.e("DeckBuilderDatabase", "Error inserting data from JSON", e)
         }

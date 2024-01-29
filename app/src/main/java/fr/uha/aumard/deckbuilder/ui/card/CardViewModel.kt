@@ -61,8 +61,8 @@ class CardViewModel @Inject constructor(
         }
     }
 
-    private val _firstnameState = MutableStateFlow(FieldWrapper<String>())
-    private val _lastnameState = MutableStateFlow(FieldWrapper<String>())
+    private val _nameState = MutableStateFlow(FieldWrapper<String>())
+    private val _descriptionState = MutableStateFlow(FieldWrapper<String>())
     private val _levelState = MutableStateFlow(FieldWrapper<String?>())
     private val _typeState = MutableStateFlow(FieldWrapper<Type?>())
     private val _isExtraDeckState = MutableStateFlow(FieldWrapper<Boolean>())
@@ -77,8 +77,8 @@ class CardViewModel @Inject constructor(
         .flatMapLatest { id -> repository.getCardById(id) }
         .map { c ->
             if (c != null) {
-                _firstnameState.emit(FieldWrapper.buildName(uiState.value, c.name))
-                _lastnameState.emit(FieldWrapper.buildDescription(uiState.value, c.description))
+                _nameState.emit(FieldWrapper.buildName(uiState.value, c.name))
+                _descriptionState.emit(FieldWrapper.buildDescription(uiState.value, c.description))
                 _typeState.emit(FieldWrapper.buildType(uiState.value, c.type))
                 _pictureState.emit(FieldWrapper.buildPicture(uiState.value, c.picture))
                 _isExtraDeckState.emit(FieldWrapper(c.isExtraDeck))
@@ -145,8 +145,8 @@ class CardViewModel @Inject constructor(
 
     val uiState: StateFlow<CardUIState> = combine(
         _initialCardState,
-        _firstnameState,
-        _lastnameState,
+        _nameState,
+        _descriptionState,
         _levelState,
         _typeState,
         _pictureState,
@@ -183,74 +183,6 @@ class CardViewModel @Inject constructor(
         val onEvent: (UIEvent) -> Unit,
     )
 
-    val uiCallback = CardUICallback(
-        onEvent = {
-            viewModelScope.launch {
-                when (it) {
-                    is UIEvent.NameChanged -> _firstnameState.emit(
-                        FieldWrapper.buildName(
-                            uiState.value,
-                            it.newValue
-                        )
-                    )
-
-                    is UIEvent.DescriptionChanged -> _lastnameState.emit(
-                        FieldWrapper.buildDescription(
-                            uiState.value,
-                            it.newValue
-                        )
-                    )
-
-                    is UIEvent.LevelChanged -> _levelState.emit(
-                        FieldWrapper.buildLevel(
-                            uiState.value,
-                            it.newValue
-                        )
-                    )
-
-                    is UIEvent.TypeChanged -> _typeState.emit(
-                        FieldWrapper.buildType(
-                            uiState.value,
-                            it.newValue
-                        )
-                    )
-
-                    is UIEvent.PictureChanged -> _pictureState.emit(
-                        FieldWrapper.buildPicture(
-                            uiState.value,
-                            it.newValue
-                        )
-                    )
-                }
-            }
-        }
-    )
-
-    fun edit(pid: Long) = viewModelScope.launch {
-        _id.emit(pid)
-    }
-
-    fun create(card: Card) = viewModelScope.launch {
-        val pid: Long = repository.create(card)
-        _id.emit(pid)
-    }
-
-    fun save() = viewModelScope.launch {
-        if (_initialCardState.value !is CardState.Success) return@launch
-        val oldCard = _initialCardState.value as CardState.Success
-        val card = Card(
-            _id.value,
-            _firstnameState.value.current!!,
-            _lastnameState.value.current!!,
-            _levelState.value.current!!,
-            _typeState.value.current!!,
-            _isExtraDeckState.value.current!!,
-            _pictureState.value.current,
-            _attackState.value.current,
-            _defenseState.value.current,
-        )
-        repository.update(oldCard.card, card)
-    }
 
     fun getCardById(cid: Long): Flow<Card?> {
         return repository.getCardById(cid)
