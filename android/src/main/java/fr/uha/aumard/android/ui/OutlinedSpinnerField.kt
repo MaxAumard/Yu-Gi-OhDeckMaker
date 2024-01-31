@@ -11,19 +11,18 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OutlinedSpinnerField (
-    value : String?,
-    onValueChange : (String) -> Unit,
-    modifier : Modifier = Modifier,
-    label : Int,
-    option_views : Array<String>,
-    option_values : Array<String>,
-    errorId : Int?
-)
-{
+fun OutlinedSpinnerField(
+    value: String?,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: Int,
+    option_views: Array<String>,
+    option_values: Array<String>,
+    errorId: Int?
+) {
     val options = option_views zip option_values
     val selected = options.firstNotNullOfOrNull { pair -> pair.takeIf() { pair.second == value } }
-    var selectedOption by remember { mutableStateOf(selected?: options.first()) }
+    var selectedOption by remember { mutableStateOf(selected ?: options.first()) }
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
@@ -35,8 +34,10 @@ fun OutlinedSpinnerField (
             value = selectedOption.first,
             readOnly = true,
             onValueChange = { },
-            modifier = modifier.fillMaxWidth().menuAnchor(),
-            label = { Text (text = stringResource(label)) },
+            modifier = modifier
+                .fillMaxWidth()
+                .menuAnchor(),
+            label = { Text(text = stringResource(label)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             supportingText = { if (errorId != null) Text(stringResource(id = errorId)) },
             isError = errorId != null,
@@ -63,7 +64,7 @@ fun OutlinedSpinnerField (
 @Preview(showBackground = true)
 @Composable
 fun OutlinedSpinnerFieldPreview() {
-    OutlinedSpinnerField (
+    OutlinedSpinnerField(
         value = "1",
         onValueChange = { },
         label = R.string.duration,

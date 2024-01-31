@@ -120,7 +120,7 @@ abstract class DeckBuilderDatabase : RoomDatabase() {
                                 && "duel" !in setName.lowercase()
                                 && "jump" !in setName.lowercase()
                                 && "promo" !in setName.lowercase()
-                                ) {
+                            ) {
                                 val newExtension = Extension(setName = setName)
                                 extensions.add(newExtension)
 

@@ -1,6 +1,6 @@
 package fr.uha.aumard.android.database
 
-import java.util.*
+import java.util.TreeMap
 
 abstract class DeltaUtil<X, Y> {
 

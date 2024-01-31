@@ -14,7 +14,8 @@ class TeamFileProvider : FileProvider(
     companion object {
 
         fun getImageUri(context: Context): Uri {
-            val directory = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "images")
+            val directory =
+                File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "images")
             directory.mkdirs()
             val filename = createUniqueName("photo", "jpg")
             val photoFile = File(directory, filename)

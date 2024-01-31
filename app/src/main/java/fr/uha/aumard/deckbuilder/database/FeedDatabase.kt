@@ -9,7 +9,7 @@ class FeedDatabase {
 
     suspend fun feedDecks() {
         repeat(3) {
-            val deckId = deckDao.create(Deck(name=deckNames.random()))
+            val deckId = deckDao.create(Deck(name = deckNames.random()))
 
             val mainDeckCards = cardDao.getRandomMainDeckCards()
             val extraDeckCards = cardDao.getRandomExtraDeckCards()

@@ -25,8 +25,6 @@ interface CardDao {
     @Query("SELECT * FROM cards WHERE cid = :id")
     fun getCardById(id: Long): Flow<Card?>
 
-    @Query("SELECT * FROM cards WHERE cid IN (:ids)")
-    suspend fun getCardsByIds(ids: List<Long>): List<Card>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun create(card: Card): Long

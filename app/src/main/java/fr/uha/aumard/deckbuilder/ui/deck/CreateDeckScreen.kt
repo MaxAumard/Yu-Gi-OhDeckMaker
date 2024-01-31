@@ -47,11 +47,17 @@ fun CreateDeckScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { AppTitle (pageTitleId = R.string.title_deck_create, isModified = uiState.isModified()) },
+                title = {
+                    AppTitle(
+                        pageTitleId = R.string.title_deck_create,
+                        isModified = uiState.isModified()
+                    )
+                },
                 actions = { AppMenu(menuEntries) }
             )
         }
-    ) { innerPadding -> Column(
+    ) { innerPadding ->
+        Column(
             modifier = Modifier.padding(innerPadding)
         ) {
             when (uiState.initialState) {

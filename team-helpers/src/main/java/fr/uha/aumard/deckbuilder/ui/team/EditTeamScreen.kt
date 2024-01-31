@@ -20,20 +20,20 @@ import fr.uha.hassenforder.team.R
 @Composable
 fun EditTeamScreen(
     vm: TeamViewModel = hiltViewModel(),
-    tid : Long,
+    tid: Long,
     back: () -> Unit,
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
-    val epoxy =  remember { mutableStateOf(false) }
+    val epoxy = remember { mutableStateOf(false) }
 
     LaunchedEffect(vm.isLaunched) {
-        if(!vm.isLaunched) {
+        if (!vm.isLaunched) {
             vm.edit(tid)
             vm.isLaunched = true
         }
     }
 
-    val menuEntries = listOf (
+    val menuEntries = listOf(
         AppMenuEntry.ActionEntry(
             title = R.string.save,
             icon = Icons.Filled.Save,
@@ -44,7 +44,12 @@ fun EditTeamScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { AppTitle (pageTitleId = R.string.title_team_edit, isModified = uiState.isModified()) },
+                title = {
+                    AppTitle(
+                        pageTitleId = R.string.title_team_edit,
+                        isModified = uiState.isModified()
+                    )
+                },
                 actions = { AppMenu(menuEntries) }
             )
         }
@@ -56,9 +61,11 @@ fun EditTeamScreen(
                 TeamViewModel.TeamState.Loading -> {
                     LoadingScreen(text = stringResource(R.string.loading))
                 }
+
                 TeamViewModel.TeamState.Error -> {
                     ErrorScreen(text = stringResource(R.string.error))
                 }
+
                 is TeamViewModel.TeamState.Success -> {
                     SuccessTeamScreen(uiState, vm.uiCallback)
                 }

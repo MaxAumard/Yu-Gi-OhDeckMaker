@@ -16,42 +16,46 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class PersonViewModel @Inject constructor (
+class PersonViewModel @Inject constructor(
     private val repository: PersonRepository
-): ViewModel() {
+) : ViewModel() {
 
     var isLaunched: Boolean = false
 
     @Immutable
     sealed interface PersonState {
-        data class Success (val person : Person) : PersonState
+        data class Success(val person: Person) : PersonState
         object Loading : PersonState
         object Error : PersonState
     }
 
-    data class FieldWrapper<T> (
-        val current: T?=null,
+    data class FieldWrapper<T>(
+        val current: T? = null,
         val errorId: Int? = null
     ) {
         companion object {
-            fun buildFirstname(state : PersonUIState, newValue: String): FieldWrapper<String> {
-                val errorId : Int? = PersonUIValidator.validateFirstnameChange(newValue)
+            fun buildFirstname(state: PersonUIState, newValue: String): FieldWrapper<String> {
+                val errorId: Int? = PersonUIValidator.validateFirstnameChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
-            fun buildLastname(state : PersonUIState, newValue: String): FieldWrapper<String> {
-                val errorId : Int? = PersonUIValidator.validateLastnameChange(newValue)
+
+            fun buildLastname(state: PersonUIState, newValue: String): FieldWrapper<String> {
+                val errorId: Int? = PersonUIValidator.validateLastnameChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
-            fun buildPhone(state : PersonUIState, newValue: String): FieldWrapper<String> {
-                val errorId : Int? = PersonUIValidator.validatePhoneChange(newValue)
+
+            fun buildPhone(state: PersonUIState, newValue: String): FieldWrapper<String> {
+                val errorId: Int? = PersonUIValidator.validatePhoneChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
-            fun buildGender(state : PersonUIState, newValue: Gender?): FieldWrapper<Gender?> {
-                val errorId : Int? = PersonUIValidator.validateGenderChange(newValue)
+
+            fun buildGender(state: PersonUIState, newValue: Gender?): FieldWrapper<Gender?> {
+                val errorId: Int? = PersonUIValidator.validateGenderChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
-            fun buildPicture(state : PersonUIState, newValue: Uri?): FieldWrapper<Uri?> {
-                val errorId : Int? = PersonUIValidator.validatePictureChange(newValue)
+
+            fun buildPicture(state: PersonUIState, newValue: Uri?): FieldWrapper<Uri?> {
+                val errorId: Int? = PersonUIValidator.validatePictureChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
         }
@@ -68,8 +72,8 @@ class PersonViewModel @Inject constructor (
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _initialPersonState: StateFlow<PersonState> = _id
         .flatMapLatest { id -> repository.getPersonById(id) }
-        .map {
-            p -> if (p != null) {
+        .map { p ->
+            if (p != null) {
                 _firstnameState.emit(FieldWrapper.buildFirstname(uiState.value, p.firstname))
                 _lastnameState.emit(FieldWrapper.buildLastname(uiState.value, p.lastname))
                 _phoneState.emit(FieldWrapper.buildPhone(uiState.value, p.phone))
@@ -83,15 +87,15 @@ class PersonViewModel @Inject constructor (
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PersonState.Loading)
 
-    data class PersonUIState (
+    data class PersonUIState(
         val initialState: PersonState,
-        val firstnameState : FieldWrapper<String>,
-        val lastnameState : FieldWrapper<String>,
-        val phoneState : FieldWrapper<String>,
-        val genderState : FieldWrapper<Gender?>,
-        val pictureState : FieldWrapper<Uri?>,
+        val firstnameState: FieldWrapper<String>,
+        val lastnameState: FieldWrapper<String>,
+        val phoneState: FieldWrapper<String>,
+        val genderState: FieldWrapper<Gender?>,
+        val pictureState: FieldWrapper<Uri?>,
     ) {
-        private fun _isModified (): Boolean? {
+        private fun _isModified(): Boolean? {
             if (initialState !is PersonState.Success) return null
             if (firstnameState.current != initialState.person.firstname) return true
             if (lastnameState.current != initialState.person.lastname) return true
@@ -102,7 +106,7 @@ class PersonViewModel @Inject constructor (
             return false
         }
 
-        private fun _hasError (): Boolean? {
+        private fun _hasError(): Boolean? {
             if (firstnameState.errorId != null) return true
             if (lastnameState.errorId != null) return true
             if (phoneState.errorId != null) return true
@@ -111,23 +115,28 @@ class PersonViewModel @Inject constructor (
             return false
         }
 
-        fun isModified() : Boolean {
+        fun isModified(): Boolean {
             val isModified = _isModified()
             if (isModified == null) return false
             return isModified
         }
 
-        fun isSavable (): Boolean {
+        fun isSavable(): Boolean {
             val hasError = _hasError()
             if (hasError == null) return false
             val isModified = _isModified()
             if (isModified == null) return false
-            return ! hasError && isModified
+            return !hasError && isModified
         }
     }
 
-    val uiState : StateFlow<PersonUIState> = combine (
-        _initialPersonState, _firstnameState, _lastnameState, _phoneState, _genderState, _pictureState
+    val uiState: StateFlow<PersonUIState> = combine(
+        _initialPersonState,
+        _firstnameState,
+        _lastnameState,
+        _phoneState,
+        _genderState,
+        _pictureState
     ) { i, f, l, p, g, a -> PersonUIState(i, f, l, p, g, a) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -142,52 +151,81 @@ class PersonViewModel @Inject constructor (
     )
 
     sealed class UIEvent {
-        data class FirstnameChanged(val newValue: String): UIEvent()
-        data class LastnameChanged(val newValue: String): UIEvent()
-        data class PhoneChanged(val newValue: String): UIEvent()
-        data class GenderChanged(val newValue: Gender): UIEvent()
-        data class PictureChanged(val newValue: Uri?): UIEvent()
+        data class FirstnameChanged(val newValue: String) : UIEvent()
+        data class LastnameChanged(val newValue: String) : UIEvent()
+        data class PhoneChanged(val newValue: String) : UIEvent()
+        data class GenderChanged(val newValue: Gender) : UIEvent()
+        data class PictureChanged(val newValue: Uri?) : UIEvent()
     }
 
-    data class PersonUICallback (
-        val onEvent : (UIEvent) -> Unit,
+    data class PersonUICallback(
+        val onEvent: (UIEvent) -> Unit,
     )
 
-    val uiCallback = PersonUICallback (
+    val uiCallback = PersonUICallback(
         onEvent = {
             viewModelScope.launch {
                 when (it) {
-                    is UIEvent.FirstnameChanged -> _firstnameState.emit(FieldWrapper.buildFirstname(uiState.value, it.newValue))
-                    is UIEvent.LastnameChanged -> _lastnameState.emit(FieldWrapper.buildLastname(uiState.value, it.newValue))
-                    is UIEvent.PhoneChanged -> _phoneState.emit(FieldWrapper.buildPhone(uiState.value, it.newValue))
-                    is UIEvent.GenderChanged -> _genderState.emit(FieldWrapper.buildGender(uiState.value, it.newValue))
-                    is UIEvent.PictureChanged -> _pictureState.emit(FieldWrapper.buildPicture(uiState.value, it.newValue))
+                    is UIEvent.FirstnameChanged -> _firstnameState.emit(
+                        FieldWrapper.buildFirstname(
+                            uiState.value,
+                            it.newValue
+                        )
+                    )
+
+                    is UIEvent.LastnameChanged -> _lastnameState.emit(
+                        FieldWrapper.buildLastname(
+                            uiState.value,
+                            it.newValue
+                        )
+                    )
+
+                    is UIEvent.PhoneChanged -> _phoneState.emit(
+                        FieldWrapper.buildPhone(
+                            uiState.value,
+                            it.newValue
+                        )
+                    )
+
+                    is UIEvent.GenderChanged -> _genderState.emit(
+                        FieldWrapper.buildGender(
+                            uiState.value,
+                            it.newValue
+                        )
+                    )
+
+                    is UIEvent.PictureChanged -> _pictureState.emit(
+                        FieldWrapper.buildPicture(
+                            uiState.value,
+                            it.newValue
+                        )
+                    )
                 }
             }
         }
     )
 
-    fun edit (pid : Long) = viewModelScope.launch {
+    fun edit(pid: Long) = viewModelScope.launch {
         _id.emit(pid)
     }
 
     fun create(person: Person) = viewModelScope.launch {
-        val pid : Long = repository.create(person)
+        val pid: Long = repository.create(person)
         _id.emit(pid)
     }
-/*
-    fun save() = viewModelScope.launch {
-        if (_initialPersonState.value !is PersonState.Success) return@launch
-        val oldPerson = _initialPersonState.value as PersonState.Success
-        val person = Person (
-            _id.value,
-            _firstnameState.value.current!!,
-            _lastnameState.value.current!!,
-            _phoneState.value.current!!,
-            _genderState.value.current!!,
-//            _pictureState.value.current
-        )
-        repository.update(oldPerson.person, person)
-    }
-*/
+    /*
+        fun save() = viewModelScope.launch {
+            if (_initialPersonState.value !is PersonState.Success) return@launch
+            val oldPerson = _initialPersonState.value as PersonState.Success
+            val person = Person (
+                _id.value,
+                _firstnameState.value.current!!,
+                _lastnameState.value.current!!,
+                _phoneState.value.current!!,
+                _genderState.value.current!!,
+    //            _pictureState.value.current
+            )
+            repository.update(oldPerson.person, person)
+        }
+    */
 }

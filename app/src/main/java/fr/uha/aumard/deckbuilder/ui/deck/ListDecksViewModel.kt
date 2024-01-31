@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class ListDecksViewModel @Inject constructor (
+class ListDecksViewModel @Inject constructor(
     private val repository: DeckRepository
 ) : ViewModel() {
     fun feed() = viewModelScope.launch {

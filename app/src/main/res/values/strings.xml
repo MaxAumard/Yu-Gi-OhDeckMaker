@@ -45,5 +45,11 @@
     <string name="card_image">Card Image</string>
     <string name="card_level_star">Level Star</string>
     <string name="loading_card_details">Loading card details...</string>
+    <string name="condition_must_set">Condiation must be set\n</string>
+    <string name="language_must_set">Language muse be set\n</string>
+    <string name="rarity_must_set">Rarity must be set</string>
+    <string name="condition">Condition</string>
+    <string name="language">Card language</string>
+    <string name="rarity">Card rarity</string>
 
 </resources>

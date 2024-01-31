@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class PersonPickerViewModel @Inject constructor (private val dao: PersonDao): ViewModel() {
+class PersonPickerViewModel @Inject constructor(private val dao: PersonDao) : ViewModel() {
 
     val persons: Flow<List<Person>> = dao.getAll()
 
@@ -39,17 +39,17 @@ class PersonPickerViewModel @Inject constructor (private val dao: PersonDao): Vi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PersonPicker (
+fun PersonPicker(
     vm: PersonPickerViewModel = hiltViewModel(),
-    @StringRes title : Int?,
-    onSelect: (person : Person?) -> Unit,
+    @StringRes title: Int?,
+    onSelect: (person: Person?) -> Unit,
 ) {
     val list = vm.persons.collectAsStateWithLifecycle(initialValue = emptyList())
     Dialog(onDismissRequest = { onSelect(null) }) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { AppTitle(pageTitleId = title?: R.string.person_select) },
+                    title = { AppTitle(pageTitleId = title ?: R.string.person_select) },
                 )
             }
         ) { innerPadding ->
@@ -59,8 +59,8 @@ fun PersonPicker (
                 items(
                     items = list.value,
                     key = { person -> person.pid }
-                ) {
-                    item -> PersonItem(item, onSelect)
+                ) { item ->
+                    PersonItem(item, onSelect)
                 }
             }
         }
@@ -68,14 +68,14 @@ fun PersonPicker (
 }
 
 @Composable
-private fun PersonItem (person : Person, onSelect: (person : Person?) -> Unit) {
-    val gender : ImageVector =
+private fun PersonItem(person: Person, onSelect: (person: Person?) -> Unit) {
+    val gender: ImageVector =
         when (person.gender) {
             Gender.NO -> Icons.Outlined.DoNotDisturb
             Gender.GIRL -> Icons.Outlined.Female
             Gender.BOY -> Icons.Outlined.Male
         }
-    ListItem (
+    ListItem(
         modifier = Modifier
             .padding(5.dp)
             .fillMaxWidth()
@@ -86,15 +86,15 @@ private fun PersonItem (person : Person, onSelect: (person : Person?) -> Unit) {
                 Text(person.lastname)
             }
         },
-/*
+        /*
 
-                supportingContent = {
-                    Row() {
-                        Icon(imageVector = Icons.Outlined.Phone, contentDescription = "phone", modifier = Modifier.padding(end = 8.dp))
-                        Text(person.phone, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                    }
-        },
-         */
+                        supportingContent = {
+                            Row() {
+                                Icon(imageVector = Icons.Outlined.Phone, contentDescription = "phone", modifier = Modifier.padding(end = 8.dp))
+                                Text(person.phone, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                            }
+                },
+                 */
         /*
                 leadingContent = {
                     if (person.picture != null) {

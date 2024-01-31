@@ -49,7 +49,6 @@ class ListCardsViewModel @Inject constructor(
     }
 
 
-
     fun updateSearchQuery(query: String) {
         currentSearchQuery.value = query
         resetPaginationAndLoad()

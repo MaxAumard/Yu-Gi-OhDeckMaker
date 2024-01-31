@@ -25,12 +25,12 @@ import fr.uha.hassenforder.team.model.Person
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListMembersField(
-    value : List<Person>?,
-    modifier : Modifier = Modifier,
+    value: List<Person>?,
+    modifier: Modifier = Modifier,
     @StringRes label: Int? = null,
-    onAdd: (pid : Long) -> Unit,
-    onDelete: (person : Person) -> Unit,
-    errorId : Int?,
+    onAdd: (pid: Long) -> Unit,
+    onDelete: (person: Person) -> Unit,
+    errorId: Int?,
 ) {
     val showDialog = remember { mutableStateOf(false) }
 
@@ -48,45 +48,45 @@ fun ListMembersField(
             }
         }
     ) { innerPadding ->
-            Column(
-                modifier = modifier
-                    .padding(innerPadding)
-                    .padding(top = 4.dp, bottom = 4.dp)
-                    .fillMaxWidth()
-                    .border(BorderStroke(1.dp, Color.Black), MaterialTheme.shapes.extraSmall)
-                    .padding(start = 16.dp)
+        Column(
+            modifier = modifier
+                .padding(innerPadding)
+                .padding(top = 4.dp, bottom = 4.dp)
+                .fillMaxWidth()
+                .border(BorderStroke(1.dp, Color.Black), MaterialTheme.shapes.extraSmall)
+                .padding(start = 16.dp)
+        ) {
+            val color =
+                if (errorId == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+            if (label != null) {
+                Text(
+                    text = stringResource(id = label),
+                    modifier = Modifier.fillMaxWidth(),
+                    color = color
+                )
+            }
+            LazyColumn(
+                modifier = Modifier.weight(1.0f).fillMaxWidth()
             ) {
-                val color =
-                    if (errorId == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-                if (label != null) {
-                    Text(
-                        text = stringResource(id = label),
-                        modifier = Modifier.fillMaxWidth(),
-                        color = color
-                    )
-                }
-                LazyColumn(
-                    modifier = Modifier.weight(1.0f).fillMaxWidth()
-                ) {
-                    items(
-                        items = value?: listOf(),
-                        key = { person : Person -> person.pid }
-                    ) { item : Person ->
-                        Divider(color = MaterialTheme.colorScheme.onBackground)
-                        SwipeableItem(
-                            onDelete = { onDelete(item) }
-                        ) {
-                            TeamPersonItem(item)
-                        }
+                items(
+                    items = value ?: listOf(),
+                    key = { person: Person -> person.pid }
+                ) { item: Person ->
+                    Divider(color = MaterialTheme.colorScheme.onBackground)
+                    SwipeableItem(
+                        onDelete = { onDelete(item) }
+                    ) {
+                        TeamPersonItem(item)
                     }
                 }
-                if (errorId != null){
-                    Text(
-                        text = stringResource(id = errorId),
-                        modifier = Modifier.fillMaxWidth(),
-                        color = color,
-                    )
-                }
             }
+            if (errorId != null) {
+                Text(
+                    text = stringResource(id = errorId),
+                    modifier = Modifier.fillMaxWidth(),
+                    color = color,
+                )
+            }
+        }
     }
 }

@@ -16,29 +16,29 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
-class RadioButtonEntry (
-    val label : String? = null,
+class RadioButtonEntry(
+    val label: String? = null,
     val icon: ImageVector? = null,
     val iconFocused: ImageVector? = null,
-    val value : String
+    val value: String
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T : Enum<T>> OutlinedEnumRadioGroup(
-    value : T? = null,
-    onValueChange : (String) -> Unit,
-    modifier : Modifier = Modifier,
-    items : Array<T>,
-    labelId : Int?,
-    errorId : Int? = null,
-    itemLabels : Array<String>? = null,
-    itemIcons : Array<ImageVector>? = null,
-    itemIconsFocused : Array<ImageVector>? = null
+    value: T? = null,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    items: Array<T>,
+    labelId: Int?,
+    errorId: Int? = null,
+    itemLabels: Array<String>? = null,
+    itemIcons: Array<ImageVector>? = null,
+    itemIconsFocused: Array<ImageVector>? = null
 ) {
-    val entries : MutableList<RadioButtonEntry> = mutableListOf()
-    items.forEach {
-        item -> entries.add(
+    val entries: MutableList<RadioButtonEntry> = mutableListOf()
+    items.forEach { item ->
+        entries.add(
             RadioButtonEntry(
                 label = if (itemLabels != null) itemLabels[item.ordinal] else null,
                 icon = if (itemIcons != null) itemIcons[item.ordinal] else null,
@@ -47,7 +47,7 @@ fun <T : Enum<T>> OutlinedEnumRadioGroup(
             )
         )
     }
-    OutlinedRadioGroup (
+    OutlinedRadioGroup(
         onChanged = onValueChange,
         modifier = modifier,
         selected = value?.name,
@@ -58,29 +58,33 @@ fun <T : Enum<T>> OutlinedEnumRadioGroup(
 }
 
 @Composable
-fun OutlinedRadioGroup (
-    entries : List<RadioButtonEntry>,
+fun OutlinedRadioGroup(
+    entries: List<RadioButtonEntry>,
     onChanged: (String) -> Unit,
-    modifier : Modifier = Modifier,
+    modifier: Modifier = Modifier,
     selected: String? = null,
-    @StringRes errorId : Int? = null,
+    @StringRes errorId: Int? = null,
     @StringRes labelId: Int? = null,
 ) {
-    Column (
+    Column(
         modifier = modifier
             .padding(top = 4.dp, bottom = 4.dp)
             .fillMaxWidth()
-            .border(BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground), MaterialTheme.shapes.extraSmall)
+            .border(
+                BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                MaterialTheme.shapes.extraSmall
+            )
             .padding(start = 16.dp),
     ) {
-        val color = if (errorId == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+        val color =
+            if (errorId == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
         if (labelId != null) {
             Text(text = stringResource(id = labelId), color = color)
         }
         Row(modifier = Modifier.padding(top = 4.dp)) {
             entries.forEach { entry -> OutlinedRadioButton(onChanged, selected, entry) }
         }
-        if (errorId != null){
+        if (errorId != null) {
             Text(
                 text = stringResource(id = errorId),
                 color = color,
@@ -90,18 +94,20 @@ fun OutlinedRadioGroup (
 }
 
 @Composable
-private fun RowScope.OutlinedRadioButton (
+private fun RowScope.OutlinedRadioButton(
     onSelectedChanged: (String) -> Unit,
     selectedValue: String? = null,
-    entry : RadioButtonEntry,
+    entry: RadioButtonEntry,
 ) {
     val selected = entry.value == selectedValue
     val background =
-        if (entry.icon == null && entry.iconFocused != null && selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else Color.Transparent
+        if (entry.icon == null && entry.iconFocused != null && selected) MaterialTheme.colorScheme.primary.copy(
+            alpha = 0.6f
+        ) else Color.Transparent
     val contentColor =
         if (entry.icon == null && entry.iconFocused != null && selected) Color.White else MaterialTheme.colorScheme.onBackground
 
-    Row (
+    Row(
         modifier = Modifier
             .selectable(
                 selected = selected,
@@ -126,6 +132,7 @@ private fun RowScope.OutlinedRadioButton (
                     )
                 }
             }
+
             entry.icon != null && entry.iconFocused == null -> {
                 RadioButton(
                     selected = selected,
@@ -137,6 +144,7 @@ private fun RowScope.OutlinedRadioButton (
                     tint = contentColor
                 )
             }
+
             entry.icon == null && entry.iconFocused != null -> {
                 Icon(
                     painter = rememberVectorPainter(entry.iconFocused),
@@ -145,6 +153,7 @@ private fun RowScope.OutlinedRadioButton (
                     modifier = Modifier.size(48.dp)
                 )
             }
+
             entry.icon == null && entry.iconFocused == null -> {
                 RadioButton(
                     selected = selected,

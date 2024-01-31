@@ -26,13 +26,13 @@ interface DeckDao {
     suspend fun create(deck: Deck): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun update (deck : Deck) : Long
+    fun update(deck: Deck): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun upsert (deck : Deck) : Long
+    fun upsert(deck: Deck): Long
 
     @Delete
-    fun delete (deck : Deck)
+    fun delete(deck: Deck)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addDeckCard(member: DeckCardAssociation)

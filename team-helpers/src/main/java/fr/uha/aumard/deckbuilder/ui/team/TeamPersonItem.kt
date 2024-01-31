@@ -25,14 +25,14 @@ import fr.uha.hassenforder.team.model.Gender
 import fr.uha.hassenforder.team.model.Person
 
 @Composable
-fun TeamPersonItem (person : Person) {
-    val gender : ImageVector =
+fun TeamPersonItem(person: Person) {
+    val gender: ImageVector =
         when (person.gender) {
             Gender.NO -> Icons.Outlined.DoNotDisturb
             Gender.GIRL -> Icons.Outlined.Female
             Gender.BOY -> Icons.Outlined.Male
         }
-    ListItem (
+    ListItem(
         headlineContent = {
             Row() {
                 Text(person.firstname, modifier = Modifier.padding(end = 8.dp))
@@ -41,7 +41,11 @@ fun TeamPersonItem (person : Person) {
         },
         supportingContent = {
             Row() {
-                Icon(imageVector = Icons.Outlined.Phone, contentDescription = "phone", modifier = Modifier.padding(end = 8.dp))
+                Icon(
+                    imageVector = Icons.Outlined.Phone,
+                    contentDescription = "phone",
+                    modifier = Modifier.padding(end = 8.dp)
+                )
                 Text(person.phone, fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
         },
@@ -57,7 +61,11 @@ fun TeamPersonItem (person : Person) {
             }
         },
         trailingContent = {
-            Icon(imageVector = gender, contentDescription = "gender", modifier = Modifier.size(48.dp) )
+            Icon(
+                imageVector = gender,
+                contentDescription = "gender",
+                modifier = Modifier.size(48.dp)
+            )
         },
     )
 }

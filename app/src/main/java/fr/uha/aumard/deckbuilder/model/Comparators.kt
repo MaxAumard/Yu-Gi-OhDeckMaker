@@ -26,7 +26,7 @@ class Comparators {
             newCards.forEach { p -> if (!oldMap.contains(p.cid)) return false }
             val newMap = mutableSetOf<Long>()
             newCards.forEach { p -> newMap.add(p.cid) }
-            oldCards.forEach { p -> if (! newMap.contains(p.cid)) return false }
+            oldCards.forEach { p -> if (!newMap.contains(p.cid)) return false }
             return true
         }
 

@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoadingScreen(
-    text : String
+    text: String
 ) {
     Text(text = text, modifier = Modifier.padding(vertical = 16.dp))
     CircularProgressIndicator()
@@ -18,7 +18,11 @@ fun LoadingScreen(
 
 @Composable
 fun ErrorScreen(
-    text : String
+    text: String
 ) {
-    Text(text = text, modifier = Modifier.padding(vertical = 16.dp), color = MaterialTheme.colorScheme.error)
+    Text(
+        text = text,
+        modifier = Modifier.padding(vertical = 16.dp),
+        color = MaterialTheme.colorScheme.error
+    )
 }

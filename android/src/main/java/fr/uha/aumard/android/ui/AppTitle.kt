@@ -11,11 +11,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AppTitle (
+fun AppTitle(
     @StringRes appNameId: Int? = null,
     color: Color = Color.White,
     @StringRes pageTitleId: Int? = null,
-    isModified : Boolean = false
+    isModified: Boolean = false
 ) {
     Row() {
         if (appNameId != null) {

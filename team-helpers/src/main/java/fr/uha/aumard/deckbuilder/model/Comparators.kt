@@ -14,7 +14,10 @@ class Comparators {
             return true
         }
 
-        fun shallowEqualsListPersons(oldPersons: List<Person>?, newPersons: List<Person>?): Boolean {
+        fun shallowEqualsListPersons(
+            oldPersons: List<Person>?,
+            newPersons: List<Person>?
+        ): Boolean {
             if (oldPersons == null && newPersons == null) return true
             if (oldPersons != null && newPersons == null) return false
             if (oldPersons == null && newPersons != null) return false
@@ -23,10 +26,10 @@ class Comparators {
             if (oldPersons.size != newPersons.size) return false
             val oldMap = mutableSetOf<Long>()
             oldPersons.forEach { p -> oldMap.add(p.pid) }
-            newPersons.forEach { p -> if (! oldMap.contains(p.pid)) return false }
+            newPersons.forEach { p -> if (!oldMap.contains(p.pid)) return false }
             val newMap = mutableSetOf<Long>()
             newPersons.forEach { p -> newMap.add(p.pid) }
-            oldPersons.forEach { p -> if (! newMap.contains(p.pid)) return false }
+            oldPersons.forEach { p -> if (!newMap.contains(p.pid)) return false }
             return true
         }
 
@@ -34,8 +37,8 @@ class Comparators {
             if (newTeam == null && oldTeam == null) return true
             if (newTeam != null && oldTeam == null) return false
             if (newTeam == null && oldTeam != null) return false
-            val safeNew : Team = newTeam as Team
-            val safeOld : Team = oldTeam as Team
+            val safeNew: Team = newTeam as Team
+            val safeOld: Team = oldTeam as Team
             if (safeNew.tid != safeOld.tid) return false
             if (safeNew.name != safeOld.name) return false
             if (safeNew.startDay != safeOld.startDay) return false

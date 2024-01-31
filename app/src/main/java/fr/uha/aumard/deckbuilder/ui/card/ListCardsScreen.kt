@@ -9,12 +9,10 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Casino
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -82,7 +80,7 @@ fun ListCardsScreen(
         ) {
             items(filteredCards) { card ->
                 if (isPickerMode) {
-                    Log.d("TEST","Card selected : $card")
+                    Log.d("TEST", "Card selected : $card")
                     CardItem(
                         card,
                         onCardClick = { onCardPicked(card) })
@@ -95,10 +93,10 @@ fun ListCardsScreen(
             }
 
             items(filteredCards) { card ->
-                Log.d("TEST","Card added : $card")
+                Log.d("TEST", "Card added : $card")
 
                 if (isPickerMode) {
-                    Log.d("TEST","Card selected : $card")
+                    Log.d("TEST", "Card selected : $card")
                     CardItem(
                         card,
                         onCardClick = { onCardPicked(card) })

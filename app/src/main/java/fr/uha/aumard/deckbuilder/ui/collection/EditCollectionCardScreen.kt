@@ -10,16 +10,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.uha.aumard.android.ui.AppMenu
 import fr.uha.aumard.android.ui.AppMenuEntry
 import fr.uha.aumard.android.ui.AppTitle
 import fr.uha.aumard.android.ui.ErrorScreen
 import fr.uha.aumard.android.ui.LoadingScreen
 import fr.uha.aumard.deckbuilder.R
-import fr.uha.aumard.deckbuilder.ui.collection.CollectionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +49,12 @@ fun EditCollectionCardScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { AppTitle (pageTitleId = R.string.title_collection_card_edit, isModified = uiState.isModified()) },
+                title = {
+                    AppTitle(
+                        pageTitleId = R.string.title_collection_card_edit,
+                        isModified = uiState.isModified()
+                    )
+                },
                 actions = { AppMenu(menuEntries) }
             )
         }

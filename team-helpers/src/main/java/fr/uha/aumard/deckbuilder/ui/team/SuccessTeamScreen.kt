@@ -22,7 +22,7 @@ fun SuccessTeamScreen(
             value = team.name.current ?: "",
             onValueChange = { uiCB.onEvent(TeamViewModel.UIEvent.NameChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text (text = stringResource(R.string.teamname)) },
+            label = { Text(text = stringResource(R.string.teamname)) },
             supportingText = { if (team.name.errorId != null) Text(stringResource(id = team.name.errorId)) },
             isError = team.name.errorId != null,
         )

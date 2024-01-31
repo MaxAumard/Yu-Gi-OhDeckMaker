@@ -15,15 +15,16 @@ class FeedDatabase {
         ids[3] = dao.create(getRandomPerson(Gender.NO))
         return ids
     }
-/*
-    private suspend fun feedTeams(pids: LongArray) {
-        val dao: TeamDao = TeamDatabase.get().getTeamDao()
-        val team = getRandomTeam(pids.get(0))
-        val tid = dao.create(team)
-        dao.addTeamPerson(TeamPersonAssociation(tid, pids.get(0)))
-        dao.addTeamPerson(TeamPersonAssociation(tid, pids.get(3)))
-    }
-*/
+
+    /*
+        private suspend fun feedTeams(pids: LongArray) {
+            val dao: TeamDao = TeamDatabase.get().getTeamDao()
+            val team = getRandomTeam(pids.get(0))
+            val tid = dao.create(team)
+            dao.addTeamPerson(TeamPersonAssociation(tid, pids.get(0)))
+            dao.addTeamPerson(TeamPersonAssociation(tid, pids.get(3)))
+        }
+    */
     suspend fun populate() {
         val pids = feedPersons()
 //        feedTeams(pids)
@@ -36,102 +37,102 @@ class FeedDatabase {
     companion object {
         private val rnd: Random = Random()
         private val maleFirstNames: Array<String> = arrayOf(
-                "Alexander",
-                "Brendon",
-                "Carrol",
-                "Davis",
-                "Emmerson",
-                "Franklin",
-                "Gordon",
-                "Humphrey",
-                "Ike",
-                "Jarrod",
-                "Kevin",
-                "Lionel",
-                "Mickey",
-                "Nathan",
-                "Oswald",
-                "Phillip",
-                "Quinn",
-                "Ralph",
-                "Shawn",
-                "Terrence",
-                "Urban",
-                "Vince",
-                "Wade",
-                "Xan",
-                "Yehowah",
-                "Zed"
+            "Alexander",
+            "Brendon",
+            "Carrol",
+            "Davis",
+            "Emmerson",
+            "Franklin",
+            "Gordon",
+            "Humphrey",
+            "Ike",
+            "Jarrod",
+            "Kevin",
+            "Lionel",
+            "Mickey",
+            "Nathan",
+            "Oswald",
+            "Phillip",
+            "Quinn",
+            "Ralph",
+            "Shawn",
+            "Terrence",
+            "Urban",
+            "Vince",
+            "Wade",
+            "Xan",
+            "Yehowah",
+            "Zed"
         )
         private val femaleFirstNames: Array<String> = arrayOf(
-                "Abigail",
-                "Betsy",
-                "Carry",
-                "Dana",
-                "Edyth",
-                "Fay",
-                "Grace",
-                "Hannah",
-                "Isabel",
-                "Jane",
-                "Karrie",
-                "Lauren",
-                "Maddie",
-                "Nanna",
-                "Oprah",
-                "Pamela",
-                "Queen",
-                "Rachel",
-                "Samanta",
-                "Tess",
-                "Ursula",
-                "Violet",
-                "Wendy",
-                "Xena",
-                "Yvonne",
-                "Zoey"
+            "Abigail",
+            "Betsy",
+            "Carry",
+            "Dana",
+            "Edyth",
+            "Fay",
+            "Grace",
+            "Hannah",
+            "Isabel",
+            "Jane",
+            "Karrie",
+            "Lauren",
+            "Maddie",
+            "Nanna",
+            "Oprah",
+            "Pamela",
+            "Queen",
+            "Rachel",
+            "Samanta",
+            "Tess",
+            "Ursula",
+            "Violet",
+            "Wendy",
+            "Xena",
+            "Yvonne",
+            "Zoey"
         )
         private val lastNames: Array<String> = arrayOf(
-                "Activox",
-                "Biseptine",
-                "Calendula",
-                "Delidose",
-                "Eludril",
-                "Fervex",
-                "Gelox",
-                "Hextril",
-                "Imurel",
-                "Jouvence",
-                "Kenzen",
-                "Lanzor",
-                "Malocide",
-                "Nicorette",
-                "Oflocet",
-                "Paracetamol",
-                "Quotane",
-                "Rennie",
-                "Smecta",
-                "Tamiflu",
-                "Uniflox",
-                "Vectrine",
-                "Wellvone",
-                "Xanax",
-                "Yranol",
-                "Zyban"
+            "Activox",
+            "Biseptine",
+            "Calendula",
+            "Delidose",
+            "Eludril",
+            "Fervex",
+            "Gelox",
+            "Hextril",
+            "Imurel",
+            "Jouvence",
+            "Kenzen",
+            "Lanzor",
+            "Malocide",
+            "Nicorette",
+            "Oflocet",
+            "Paracetamol",
+            "Quotane",
+            "Rennie",
+            "Smecta",
+            "Tamiflu",
+            "Uniflox",
+            "Vectrine",
+            "Wellvone",
+            "Xanax",
+            "Yranol",
+            "Zyban"
         )
         private val teamNames: Array<String> = arrayOf(
-                "Zeus",
-                "Héra",
-                "Hestia",
-                "Déméter",
-                "Apollon",
-                "Artémis",
-                "Héphaïstos",
-                "Athéna",
-                "Arès",
-                "Aphrodite",
-                "Hermès",
-                "Dionysos"
+            "Zeus",
+            "Héra",
+            "Hestia",
+            "Déméter",
+            "Apollon",
+            "Artémis",
+            "Héphaïstos",
+            "Athéna",
+            "Arès",
+            "Aphrodite",
+            "Hermès",
+            "Dionysos"
         )
 
         private fun geRandomName(names: Array<String>): String {
@@ -182,29 +183,30 @@ class FeedDatabase {
         }
 
         private fun getRandomPerson(gender: Gender): Person {
-            return Person(0,
-                    getRandomFirstName(gender),
-                    getRandomLastName(),
-                    getRandomPhone(),
-                    gender,
+            return Person(
+                0,
+                getRandomFirstName(gender),
+                getRandomLastName(),
+                getRandomPhone(),
+                gender,
             )
         }
 
         private fun getRandomTeamName(): String {
             return geRandomName(teamNames)
         }
-/*
-        private fun getRandomTeam(leader: Long): Team {
-            return Team(0,
-                    getRandomTeamName(),
-                    Objective.values()[rnd.nextInt(Objective.values().size)].name,
-                    Date(),
-                    getRandomBetween(3, 9),
-                    getRandomBetween(2, 4),
-                    getRandomBetween(4, 6),
-                    leader
-            )
-        }
-*/
+        /*
+                private fun getRandomTeam(leader: Long): Team {
+                    return Team(0,
+                            getRandomTeamName(),
+                            Objective.values()[rnd.nextInt(Objective.values().size)].name,
+                            Date(),
+                            getRandomBetween(3, 9),
+                            getRandomBetween(2, 4),
+                            getRandomBetween(4, 6),
+                            leader
+                    )
+                }
+        */
     }
 }

@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.room.TypeConverter
 import java.io.ByteArrayOutputStream
-import java.util.*
+import java.util.Date
 
 object DatabaseTypeConverters {
     @TypeConverter
@@ -19,20 +19,24 @@ object DatabaseTypeConverters {
     }
 
     @TypeConverter
-    fun string2Uri(path:String): Uri? {
+    fun string2Uri(path: String): Uri? {
         if (path == "null://") return null
-        return Uri.parse (path)
+        return Uri.parse(path)
     }
 
     @TypeConverter
-    fun uri2String(uri : Uri?): String {
+    fun uri2String(uri: Uri?): String {
         if (uri == null) return "null://"
         return uri.toString()
     }
 
     @TypeConverter
     fun toBitmap(content: ByteArray?): Bitmap? {
-        return if (content == null) null else BitmapFactory.decodeByteArray(content, 0, content.size)
+        return if (content == null) null else BitmapFactory.decodeByteArray(
+            content,
+            0,
+            content.size
+        )
     }
 
     @TypeConverter

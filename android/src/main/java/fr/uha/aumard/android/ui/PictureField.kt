@@ -47,12 +47,12 @@ class TakePictureWithUriContract : ActivityResultContract<Uri, Pair<Boolean, Uri
 
 @Composable
 fun PictureField(
-    value : Uri? = null,
+    value: Uri? = null,
     onValueChange: (Uri?) -> Unit,
-    newImageUriProvider : (Context) -> Uri,
-    modifier : Modifier = Modifier,
+    newImageUriProvider: (Context) -> Uri,
+    modifier: Modifier = Modifier,
     @StringRes labelId: Int? = null,
-    @StringRes errorId : Int? = null,
+    @StringRes errorId: Int? = null,
 ) {
     val context = LocalContext.current
 
@@ -75,14 +75,18 @@ fun PictureField(
         onResult = { success -> if (success.first) onValueChange(success.second) }
     )
 
-    Column (
+    Column(
         modifier = modifier
             .padding(top = 4.dp, bottom = 4.dp)
             .fillMaxWidth()
-            .border(BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground), MaterialTheme.shapes.extraSmall)
+            .border(
+                BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                MaterialTheme.shapes.extraSmall
+            )
             .padding(start = 16.dp),
     ) {
-        val color = if (errorId == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+        val color =
+            if (errorId == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
         if (labelId != null) {
             Text(
                 text = stringResource(id = labelId),
@@ -101,7 +105,7 @@ fun PictureField(
                 Button(onClick = { onValueChange(null) }) {
                     Icon(imageVector = Icons.Outlined.Delete, contentDescription = "delete picture")
                 }
-                Row (horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     Button(onClick = { imagePicker.launch(arrayOf("image/*")) }) {
                         Icon(
                             imageVector = Icons.Outlined.PhotoLibrary,
@@ -113,12 +117,15 @@ fun PictureField(
                             cameraLauncher.launch(newImageUriProvider(context))
                         }
                     ) {
-                        Icon(imageVector = Icons.Outlined.Camera, contentDescription = "take picture")
+                        Icon(
+                            imageVector = Icons.Outlined.Camera,
+                            contentDescription = "take picture"
+                        )
                     }
                 }
             }
         }
-        if (errorId != null){
+        if (errorId != null) {
             Text(
                 text = stringResource(id = errorId),
                 color = color,

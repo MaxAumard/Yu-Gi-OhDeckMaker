@@ -35,12 +35,12 @@ import fr.uha.hassenforder.team.model.Gender
 import fr.uha.hassenforder.team.model.Person
 
 @Composable
-fun LeaderField (
-    value : Person?,
-    onValueChange : (Boolean) -> Unit,
-    modifier : Modifier = Modifier,
+fun LeaderField(
+    value: Person?,
+    onValueChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
     @StringRes label: Int? = null,
-    errorId : Int?,
+    errorId: Int?,
 ) {
     Column(
         modifier = modifier
@@ -52,10 +52,15 @@ fun LeaderField (
                 onClick = { onValueChange(true) }
             ),
     ) {
-        val color = if (errorId == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+        val color =
+            if (errorId == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
         if (label != null) {
-            Row () {
-                Text(text = stringResource(id = label), color = color, modifier = Modifier.weight(1.0F))
+            Row() {
+                Text(
+                    text = stringResource(id = label),
+                    color = color,
+                    modifier = Modifier.weight(1.0F)
+                )
                 Icon(
                     imageVector = Icons.Outlined.Delete,
                     contentDescription = "remove",
@@ -66,9 +71,9 @@ fun LeaderField (
             }
         }
         if (value != null) {
-            TeamPersonItem (value)
+            TeamPersonItem(value)
         }
-        if (errorId != null){
+        if (errorId != null) {
             Text(
                 text = stringResource(id = errorId),
                 color = color,

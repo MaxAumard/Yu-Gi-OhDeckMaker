@@ -1,35 +1,44 @@
 package fr.uha.aumard.android.ui
 
+//import androidx.compose.material.ContentAlpha
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
-//import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 
 sealed interface AppMenuEntry {
-    data class OverflowEntry (
+    data class OverflowEntry(
         @StringRes val title: Int,
         val enabled: Boolean = true,
-        val listener : () -> Unit
+        val listener: () -> Unit
     ) : AppMenuEntry
-    data class ActionEntry (
+
+    data class ActionEntry(
         @StringRes val title: Int,
         val icon: ImageVector,
         val enabled: Boolean = true,
-        val listener : () -> Unit
+        val listener: () -> Unit
     ) : AppMenuEntry
 }
 
 @Composable
-fun AppMenu (entries : List<AppMenuEntry>) {
+fun AppMenu(entries: List<AppMenuEntry>) {
     var showMenu by remember { mutableStateOf(false) }
-    Row (modifier = Modifier){
+    Row(modifier = Modifier) {
         entries.filterIsInstance<AppMenuEntry.ActionEntry>().forEach { entry ->
             ActionMenuItem(entry.title, entry.icon, entry.enabled) { entry.listener() }
         }
@@ -48,9 +57,9 @@ fun AppMenu (entries : List<AppMenuEntry>) {
 }
 
 @Composable
-private fun OverflowMenuItem (
-    @StringRes title : Int,
-    listener : () -> Unit
+private fun OverflowMenuItem(
+    @StringRes title: Int,
+    listener: () -> Unit
 ) {
     DropdownMenuItem(
         text = { Text(text = stringResource(id = title), color = Color.White) },
@@ -59,11 +68,11 @@ private fun OverflowMenuItem (
 }
 
 @Composable
-private fun ActionMenuItem (
-    @StringRes title : Int,
-    icon : ImageVector,
-    enabled : Boolean = true,
-    listener : () -> Unit
+private fun ActionMenuItem(
+    @StringRes title: Int,
+    icon: ImageVector,
+    enabled: Boolean = true,
+    listener: () -> Unit
 ) {
     IconButton(onClick = listener, enabled = enabled) {
         Icon(
@@ -75,11 +84,11 @@ private fun ActionMenuItem (
 }
 
 @Composable
-private fun ActionMenuItem (
-    title : String,
-    icon : ImageVector,
-    enabled : Boolean = true,
-    listener : () -> Unit
+private fun ActionMenuItem(
+    title: String,
+    icon: ImageVector,
+    enabled: Boolean = true,
+    listener: () -> Unit
 ) {
     IconButton(onClick = listener, enabled = enabled) {
         Icon(

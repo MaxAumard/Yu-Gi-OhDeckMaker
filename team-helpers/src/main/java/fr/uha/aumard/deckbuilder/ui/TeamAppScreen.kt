@@ -20,8 +20,8 @@ fun TeamAppScreen() {
         ) {
             Scaffold(
                 bottomBar = { BottomBar(navController = navController) }
-            ) {
-                innerPadding -> BottomNavGraph(
+            ) { innerPadding ->
+                BottomNavGraph(
                     navController = navController,
                     modifier = Modifier.padding(innerPadding)
                 )

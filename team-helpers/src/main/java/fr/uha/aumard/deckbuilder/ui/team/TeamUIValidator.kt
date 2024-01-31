@@ -8,11 +8,11 @@ import java.util.*
 
 object TeamUIValidator {
 
-    fun validateNameChange(newValue: String) : Int? {
+    fun validateNameChange(newValue: String): Int? {
         return when {
-            newValue.isEmpty()  ->  R.string.value_empty
-            newValue.isBlank()  ->  R.string.value_blank
-            newValue.length < 3 ->  R.string.value_too_short
+            newValue.isEmpty() -> R.string.value_empty
+            newValue.isBlank() -> R.string.value_blank
+            newValue.length < 3 -> R.string.value_too_short
             else -> null
         }
     }
@@ -27,36 +27,36 @@ object TeamUIValidator {
         return calendar.toInstant()
     }
 
-    fun validateStartDayChange(newValue: Date?) : Int? {
+    fun validateStartDayChange(newValue: Date?): Int? {
         if (newValue == null) return R.string.date_must_set
         val day = instantToMidnight(newValue)
         val today = instantToMidnight(Date())
         val between: Long = ChronoUnit.DAYS.between(today, day)
         if (between < -7) return R.string.date_too_old
-        if (between >  7) return R.string.date_too_far
+        if (between > 7) return R.string.date_too_far
         return null
     }
 
-    fun validateDurationChange(newValue: Int) : Int? {
+    fun validateDurationChange(newValue: Int): Int? {
         return when {
-            newValue < 2 ->  R.string.duration_too_short
-            newValue > 9 ->  R.string.duration_too_long
+            newValue < 2 -> R.string.duration_too_short
+            newValue > 9 -> R.string.duration_too_long
             else -> null
         }
     }
 
-    fun validateLeaderChange(newValue: Person?) : Int? {
+    fun validateLeaderChange(newValue: Person?): Int? {
         if (newValue == null) return R.string.leader_must_known
         return null
     }
 
-    fun validateMembersChange(state : TeamViewModel.TeamUIState, newValue: List<Person>?) : Int? {
+    fun validateMembersChange(state: TeamViewModel.TeamUIState, newValue: List<Person>?): Int? {
         if (newValue == null) return R.string.decks_not_empty
         val size = newValue.size
         return when {
             size == 0 -> R.string.decks_not_empty
-            size < 3 ->  R.string.decks_not_enough
-            size > 6 ->  R.string.decks_too_much
+            size < 3 -> R.string.decks_not_enough
+            size > 6 -> R.string.decks_too_much
             else -> null
         }
     }

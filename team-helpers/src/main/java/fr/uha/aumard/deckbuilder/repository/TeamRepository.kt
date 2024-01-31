@@ -9,12 +9,12 @@ import fr.uha.hassenforder.team.database.TeamDao
 import fr.uha.hassenforder.team.model.*
 import kotlinx.coroutines.flow.Flow
 
-class TeamRepository (
-    private val teamDao : TeamDao,
-    private val personDao : PersonDao,
+class TeamRepository(
+    private val teamDao: TeamDao,
+    private val personDao: PersonDao,
 ) {
 
-    fun getAll() : Flow<List<Team>> {
+    fun getAll(): Flow<List<Team>> {
         return teamDao.getAll()
     }
 
@@ -33,22 +33,25 @@ class TeamRepository (
 
     @WorkerThread
     suspend fun saveTeam(oldTeam: FullTeam, newTeam: FullTeam): Long {
-        var teamToSave : Team? = null
-        if (! Comparators.shallowEqualsTeam(oldTeam.team, newTeam.team)) {
+        var teamToSave: Team? = null
+        if (!Comparators.shallowEqualsTeam(oldTeam.team, newTeam.team)) {
             teamToSave = newTeam.team
         }
         val teamId: Long = newTeam.team.tid
-        val delta: DeltaUtil<Person, TeamPersonAssociation> = object : DeltaUtil<Person, TeamPersonAssociation>() {
-            override fun getId(input: Person): Long {
-                return input.pid
+        val delta: DeltaUtil<Person, TeamPersonAssociation> =
+            object : DeltaUtil<Person, TeamPersonAssociation>() {
+                override fun getId(input: Person): Long {
+                    return input.pid
+                }
+
+                override fun same(initial: Person, now: Person): Boolean {
+                    return true
+                }
+
+                override fun createFor(input: Person): TeamPersonAssociation {
+                    return TeamPersonAssociation(teamId, input.pid)
+                }
             }
-            override fun same(initial: Person, now: Person): Boolean {
-                return true
-            }
-            override fun createFor(input: Person): TeamPersonAssociation {
-                return TeamPersonAssociation(teamId, input.pid)
-            }
-        }
         val oldList = oldTeam.members
         val newList = newTeam.members
         delta.calculate(oldList, newList)
@@ -62,7 +65,7 @@ class TeamRepository (
 
     suspend fun delete(team: Team) {
         teamDao.delete(team)
-        teamDao.deleteTeamPersons (team.tid)
+        teamDao.deleteTeamPersons(team.tid)
     }
 
 }

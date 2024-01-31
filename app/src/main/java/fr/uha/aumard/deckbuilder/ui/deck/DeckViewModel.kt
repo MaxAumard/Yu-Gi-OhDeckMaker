@@ -89,7 +89,8 @@ class DeckViewModel @Inject constructor(
             .flatMapLatest { id -> repository.getCardById(id) }
             .map { cardToAdd ->
                 if (cardToAdd != null && canAddCard(cardToAdd)) {
-                    val updatedCards = (_cardsState.value.current ?: mutableListOf()).toMutableList()
+                    val updatedCards =
+                        (_cardsState.value.current ?: mutableListOf()).toMutableList()
                     updatedCards.add(cardToAdd)
                     _cardsState.emit(FieldWrapper.buildCards(uiState.value, updatedCards))
                 }
@@ -115,7 +116,6 @@ class DeckViewModel @Inject constructor(
     ) {
         private fun _isModified(): Boolean? {
             if (initialState !is DeckState.Success) return null
-            if (name.current != initialState.deckBuilder.deck.name) return true
             if (name.current != initialState.deckBuilder.deck.name) return true
             if (startDay.current != initialState.deckBuilder.deck.creationDate) return true
             if (!Comparators.shallowEqualsListCards(
@@ -144,11 +144,11 @@ class DeckViewModel @Inject constructor(
             if (hasError == null) return false
             val isModified = _isModified()
             if (isModified == null) return false
-            return ! hasError && isModified
+            return !hasError && isModified
         }
     }
 
-    val uiState : StateFlow<DeckUIState> = combine (
+    val uiState: StateFlow<DeckUIState> = combine(
         _initialDeckState,
         _nameState, _startDayState,
         _cardsState
@@ -164,14 +164,14 @@ class DeckViewModel @Inject constructor(
     )
 
     sealed class UIEvent {
-        data class NameChanged(val newValue: String): UIEvent()
-        data class DateChanged(val newValue: java.util.Date): UIEvent()
-        data class CardAdded(val newValue: Long): UIEvent()
-        data class CardDeleted(val newValue: Card): UIEvent()
+        data class NameChanged(val newValue: String) : UIEvent()
+        data class DateChanged(val newValue: java.util.Date) : UIEvent()
+        data class CardAdded(val newValue: Long) : UIEvent()
+        data class CardDeleted(val newValue: Card) : UIEvent()
     }
 
     data class DeckUICallback(
-        val onEvent : (UIEvent) -> Unit,
+        val onEvent: (UIEvent) -> Unit,
     )
 
     val uiCallback = DeckUICallback(
@@ -191,7 +191,7 @@ class DeckViewModel @Inject constructor(
         _deckId.emit(cid)
     }
 
-    fun create(deck: Deck) = viewModelScope.launch(Dispatchers.IO)  {
+    fun create(deck: Deck) = viewModelScope.launch(Dispatchers.IO) {
         val cid: Long = repository.createDeck(deck)
         _deckId.emit(cid)
     }
@@ -199,7 +199,7 @@ class DeckViewModel @Inject constructor(
     fun save() = viewModelScope.launch(Dispatchers.IO) {
         if (_initialDeckState.value !is DeckState.Success) return@launch
         val oldDeck = _initialDeckState.value as DeckState.Success
-        val deck = FullDeck (
+        val deck = FullDeck(
             Deck(
                 did = _deckId.value,
                 name = _nameState.value.current!!,

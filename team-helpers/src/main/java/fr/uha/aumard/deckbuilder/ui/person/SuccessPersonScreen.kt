@@ -22,7 +22,7 @@ fun SuccessPersonScreen(
             value = person.firstnameState.current ?: "",
             onValueChange = { uiCB.onEvent(PersonViewModel.UIEvent.FirstnameChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text (stringResource(id = R.string.firstname)) },
+            label = { Text(stringResource(id = R.string.firstname)) },
             supportingText = { if (person.firstnameState.errorId != null) Text(stringResource(id = person.firstnameState.errorId)) },
             isError = person.firstnameState.errorId != null,
         )
@@ -30,7 +30,7 @@ fun SuccessPersonScreen(
             value = person.lastnameState.current ?: "",
             onValueChange = { uiCB.onEvent(PersonViewModel.UIEvent.LastnameChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text (stringResource(id = R.string.lastname)) },
+            label = { Text(stringResource(id = R.string.lastname)) },
             supportingText = { if (person.lastnameState.errorId != null) Text(stringResource(id = person.lastnameState.errorId)) },
             isError = person.lastnameState.errorId != null,
         )
@@ -38,7 +38,7 @@ fun SuccessPersonScreen(
             value = person.phoneState.current ?: "",
             onValueChange = { uiCB.onEvent(PersonViewModel.UIEvent.PhoneChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text (stringResource(id = R.string.phone)) },
+            label = { Text(stringResource(id = R.string.phone)) },
             supportingText = { if (person.phoneState.errorId != null) Text(stringResource(id = person.phoneState.errorId)) },
             isError = person.phoneState.errorId != null,
         )

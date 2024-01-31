@@ -1,6 +1,7 @@
 package fr.uha.aumard.deckbuilder.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -28,18 +29,29 @@ interface CollectionCardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAssociation(association: CollectionCardAssociation)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(collectionCard: CollectionCard): Long
 
     @Update
     suspend fun update(collectionCard: CollectionCard)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun upsert(collectionCard: CollectionCard): Long
 
     @Query("SELECT * FROM collection_cards WHERE ccid = :ccid")
-    suspend fun getCollectionCardById(ccid: Long): CollectionCard?
+    fun getCollectionCardById(ccid: Long): Flow<CollectionCard?>
 
     @Query("SELECT * FROM collection_cards")
     fun getAll(): Flow<List<CollectionCard>>
 
+    @Delete
+    fun delete(collectionCard: CollectionCard)
 
+    @Query(
+        """
+    SELECT collection_cards.ccid
+    FROM collection_cards 
+    INNER JOIN collection_card_associations ON collection_cards.ccid = collection_card_associations.ccid
+    WHERE collection_card_associations.cid = :cardId
+    """
+    )
+    fun getCollectionCardId(cardId: Long): Flow<Long?>
 }

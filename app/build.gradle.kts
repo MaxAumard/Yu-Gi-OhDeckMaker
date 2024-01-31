@@ -85,7 +85,7 @@ dependencies {
     implementation("androidx.navigation:navigation-common-ktx:2.7.0")
 
     // Room components
-    implementation( "androidx.room:room-ktx:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
     implementation("com.google.android.material:material:1.9.0")
     implementation(project(mapOf("path" to ":android")))
     implementation("androidx.wear.compose:compose-material:1.2.1")

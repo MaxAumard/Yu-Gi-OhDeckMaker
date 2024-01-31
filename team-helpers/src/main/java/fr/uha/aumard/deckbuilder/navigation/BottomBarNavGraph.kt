@@ -45,7 +45,7 @@ sealed class BottomBarNavGraphEntry(
 ) {
 
     // for persons
-    object Persons: BottomBarNavGraphEntry(
+    object Persons : BottomBarNavGraphEntry(
         route = "tl_persons",
         title = R.string.action_persons,
         icon = Icons.Outlined.Person,
@@ -53,7 +53,7 @@ sealed class BottomBarNavGraphEntry(
     )
 
     // for teams
-    object Teams: BottomBarNavGraphEntry(
+    object Teams : BottomBarNavGraphEntry(
         route = "tl_teams",
         title = R.string.action_teams,
         icon = Icons.Outlined.Group,
@@ -63,7 +63,7 @@ sealed class BottomBarNavGraphEntry(
 }
 
 @Composable
-fun BottomNavGraph (
+fun BottomNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -71,7 +71,7 @@ fun BottomNavGraph (
         navController = navController,
         startDestination = BottomBarNavGraphEntry.Persons.route,
         modifier = modifier
-     ) {
+    ) {
         personsNavGraph(navController = navController)
 //        teamsNavGraph(navController = navController)
     }

@@ -37,7 +37,7 @@ interface TeamDao {
     @Delete
     suspend fun removeTeamPerson(members: List<TeamPersonAssociation>)
 
-    @Query ("DELETE FROM deck_card_associations WHERE tid = :tid")
+    @Query("DELETE FROM deck_card_associations WHERE tid = :tid")
     fun deleteTeamPersons(tid: Long)
 
 }

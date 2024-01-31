@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity(tableName = "teams")
-data class Team (
+data class Team(
     @PrimaryKey(autoGenerate = true)
     val tid: Long = 0,
     val name: String = "",

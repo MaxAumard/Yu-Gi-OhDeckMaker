@@ -9,14 +9,14 @@ class Converter {
 
         private var output: SimpleDateFormat? = null
 
-        private fun getDateShortFormater () : SimpleDateFormat {
+        private fun getDateShortFormater(): SimpleDateFormat {
             if (output == null) {
                 output = SimpleDateFormat("dd MMMM yyyy")
             }
             return output!!
         }
 
-        fun convert (date : Date?, default : String = "") : String {
+        fun convert(date: Date?, default: String = ""): String {
             if (date == null) {
                 return default
             } else {

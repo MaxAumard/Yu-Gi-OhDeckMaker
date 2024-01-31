@@ -33,7 +33,7 @@ sealed class BottomBarNavGraphEntry(
 ) {
 
     // for cards
-    object Cards: BottomBarNavGraphEntry(
+    object Cards : BottomBarNavGraphEntry(
         route = "tl_cards",
         icon = R.drawable.ic_outlined_card,
         iconFocused = R.drawable.ic_filled_card
@@ -54,7 +54,7 @@ sealed class BottomBarNavGraphEntry(
 }
 
 @Composable
-fun BottomNavGraph (
+fun BottomNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -62,7 +62,7 @@ fun BottomNavGraph (
         navController = navController,
         startDestination = BottomBarNavGraphEntry.Cards.route,
         modifier = modifier
-     ) {
+    ) {
         cardsNavGraph(navController = navController)
         decksNavGraph(navController = navController)
         collectionNavGraph(navController = navController)

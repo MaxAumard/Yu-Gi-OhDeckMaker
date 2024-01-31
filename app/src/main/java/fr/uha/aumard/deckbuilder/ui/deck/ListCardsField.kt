@@ -1,6 +1,5 @@
 package fr.uha.aumard.deckbuilder.ui.deck
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
