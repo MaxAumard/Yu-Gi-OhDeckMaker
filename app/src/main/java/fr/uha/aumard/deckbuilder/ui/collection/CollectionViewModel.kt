@@ -37,6 +37,7 @@ class CollectionViewModel @Inject constructor(
 
     ) : ViewModel() {
     private val _selectedExtension = MutableStateFlow<Extension?>(null)
+
     val selectedExtension: StateFlow<Extension?> = _selectedExtension.asStateFlow()
     val extensions: Flow<List<Extension>> = extensionRepository.getExtensions()
     var isLaunched: Boolean = false
@@ -64,17 +65,17 @@ class CollectionViewModel @Inject constructor(
     ) {
         companion object {
 
-            fun buildCondition(newValue: Condition): CollectionViewModel.FieldWrapper<Condition> {
+            fun buildCondition(newValue: Condition): FieldWrapper<Condition> {
                 val errorId: Int? = CollectionUIValidator.validateConditionChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
 
-            fun buildLanguage(newValue: Language): CollectionViewModel.FieldWrapper<Language> {
+            fun buildLanguage(newValue: Language): FieldWrapper<Language> {
                 val errorId: Int? = CollectionUIValidator.validateLanguageChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
 
-            fun buildRarity(newValue: Rarity): CollectionViewModel.FieldWrapper<Rarity> {
+            fun buildRarity(newValue: Rarity): FieldWrapper<Rarity> {
                 val errorId: Int? = CollectionUIValidator.validateRarityChange(newValue)
                 return FieldWrapper(newValue, errorId)
             }
@@ -117,7 +118,7 @@ class CollectionViewModel @Inject constructor(
             return false
         }
 
-        private fun _hasError(): Boolean? {
+        private fun _hasError(): Boolean {
             if (condition.errorId != null) return true
             if (language.errorId != null) return true
             if (rarity.errorId != null) return true
@@ -132,9 +133,7 @@ class CollectionViewModel @Inject constructor(
 
         fun isSavable(): Boolean {
             val hasError = _hasError()
-            if (hasError == null) return false
-            val isModified = _isModified()
-            if (isModified == null) return false
+            val isModified = _isModified() ?: return false
             return !hasError && isModified
         }
     }
@@ -211,6 +210,13 @@ class CollectionViewModel @Inject constructor(
             rarity = _rarityState.value.current!!
         )
         collectionCardRepository.saveCollectionCard(collectionCard)
+    }
+
+    fun delete(ccid: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            collectionCardRepository.deleteCollectionCard(ccid)
+            _selectedExtension.value?.let { selectExtension(it) }
+        }
     }
 
     fun selectExtension(extension: Extension) {

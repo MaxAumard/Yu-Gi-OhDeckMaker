@@ -34,5 +34,9 @@ class CollectionCardRepository(
         return collectionCardDao.countCardInCollection(cardId)
     }
 
+    fun deleteCollectionCard(ccid: Long) {
+        return collectionCardDao.delete(ccid)
+    }
+
 
 }

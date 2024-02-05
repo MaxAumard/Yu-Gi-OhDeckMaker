@@ -1,7 +1,6 @@
 package fr.uha.aumard.deckbuilder.database
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -42,8 +41,8 @@ interface CollectionCardDao {
     @Query("SELECT * FROM collection_cards")
     fun getAll(): Flow<List<CollectionCard>>
 
-    @Delete
-    fun delete(collectionCard: CollectionCard)
+    @Query("DELETE FROM collection_cards WHERE ccid = :ccid")
+    fun delete(ccid: Long)
 
     @Query(
         """

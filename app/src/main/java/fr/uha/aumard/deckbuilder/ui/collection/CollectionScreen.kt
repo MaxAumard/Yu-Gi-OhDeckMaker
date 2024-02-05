@@ -27,10 +27,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import fr.uha.aumard.android.ui.SwipeableItem
+import fr.uha.aumard.deckbuilder.R
 import fr.uha.aumard.deckbuilder.model.Card
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,13 +49,16 @@ fun CollectionScreen(
     val cards by viewModel.getCardsInExtension(selectedExtension?.setName ?: "")
         .collectAsState(initial = listOf())
     Scaffold(topBar = {
-        TopAppBar(title = { Text("My Collection") })
+        TopAppBar(title = { Text(text = stringResource(R.string.title_my_collection)) })
     }) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)
         ) {
             Button(onClick = { expanded.value = true }) {
-                Text(text = selectedExtension?.setName ?: "Select an extension")
+                Text(
+                    text = selectedExtension?.setName
+                        ?: stringResource(R.string.input_default_select_extension)
+                )
             }
 
             DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
@@ -70,13 +76,20 @@ fun CollectionScreen(
                         .collectAsState(initial = false)
                     val ccid by viewModel.getCollectionCardId(card.cid)
                         .collectAsState(initial = -1)
-                    CollectionCardItem(card, isCardInCollection) { cardId, isCollected ->
-                        if (isCollected) {
-                            onEdit(ccid as Long)
-                        } else {
-                            onCreate(card.cid)
+
+                    SwipeableItem(
+                        onDelete = { ccid?.let { viewModel.delete(it) } }
+                    ) {
+                        CollectionCardItem(card, isCardInCollection) { cardId, isCollected ->
+                            if (isCollected) {
+                                onEdit(ccid as Long)
+                            } else {
+                                onCreate(card.cid)
+                            }
                         }
                     }
+
+
                 }
             }
         }
@@ -103,7 +116,11 @@ fun CollectionCardItem(card: Card, isCardInCollection: Boolean, onClick: (Long, 
             Spacer(Modifier.width(8.dp))
             Column {
                 Text(text = card.name, fontWeight = FontWeight.Bold)
-                Text(text = if (isCardInCollection) "Owned" else "Not owned")
+                Text(
+                    text = if (isCardInCollection) stringResource(R.string.owened) else stringResource(
+                        R.string.not_owened
+                    )
+                )
             }
         }
     }

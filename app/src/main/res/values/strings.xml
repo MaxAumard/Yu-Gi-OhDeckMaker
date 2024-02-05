@@ -51,5 +51,9 @@
     <string name="condition">Condition</string>
     <string name="language">Card language</string>
     <string name="rarity">Card rarity</string>
+    <string name="title_my_collection">My Collection</string>
+    <string name="input_default_select_extension">Select extension</string>
+    <string name="owened">Owned</string>
+    <string name="not_owened">Not owned</string>
 
 </resources>
